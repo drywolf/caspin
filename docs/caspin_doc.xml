@@ -1,0 +1,37 @@
+<Project>
+
+  <IncludeDirectory path="../include" />
+  <IncludeDirectory path="../tamarin/core" />
+  <IncludeDirectory path="../tamarin/vmpi" />
+  <IncludeDirectory path="../tamarin/shell" />
+  <IncludeDirectory path="../tamarin/platform" />
+  <IncludeDirectory path="../tamarin/mmgc" />
+  <IncludeDirectory path="../tamarin/eval" />
+  <IncludeDirectory path="../tamarin/extensions" />
+
+  <!-- ASM overrides -->
+  <Macro name="#define _asm //" />
+  <Macro name="#define bsr //" />
+  
+  <Macro name="#define XNOTE_BUILD" />
+  <Macro name="typedef unsigned int size_t;" />
+  <Macro name="#define UNDER_CE" />
+  <Macro name="#define WIN32" />
+  <Macro name="#define _WINDOWS" />
+  <Macro name="#define _MSC_VER 1400" />
+
+  <CodeDirectory path="../include" />
+  
+  <IgnoreSymbol name="avmplus" />
+  <IgnoreSymbol name="MMgc" />
+
+  <IgnoreCodeFile name="caspin_base.h" />
+  <IgnoreCodeFile name="cspWinPlatform.h" />
+  <IgnoreCodeFile name="cspUnixPlatform.h" />
+
+  <DocumentationDirectory path="./documentation/"/>
+  <OutputDirectory path="./output/"/>
+
+  <Doxyfile path="./Doxyfile"/>
+
+</Project>
