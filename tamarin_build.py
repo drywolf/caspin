@@ -6,30 +6,39 @@ import colors;
 import shutil;
 
 if os.name != "posix":
-	colors.printc("red", "ERROR: only usable on unix systems")
+	colors.println("r", "ERROR: only usable on unix systems")
 	sys.exit(0)
 
 # the initial working directory
 cwd = os.getcwd()
 
+if not os.path.exists(cwd + "/tamarin/bin"):
+	os.mkdir(cwd + "/tamarin/bin")
+
 os.chdir(cwd + "/tamarin/bin")
 
+def build_config(config):
+	colors.printf("d", "build the ")
+	colors.printf("r", config)
+	colors.println("d", " configuration? [y/n]")
+	return raw_input("")
 
 
-build_debug_debugger =		raw_input("build the DEBUG_DEBUGGER configuration? [y/n]\n")
-build_debug =				raw_input("build the DEBUG configuration? [y/n]\n")
-build_release_debugger =	raw_input("build the RELEASE_DEBUGGER configuration? [y/n]\n")
-build_release =				raw_input("build the RELEASE configuration? [y/n]\n")
+
+build_debug_debugger =		build_config("DEBUG_DEBUGGER")
+build_debug =				build_config("DEBUG")
+build_release_debugger =	build_config("RELEASE_DEBUGGER")
+build_release =				build_config("RELEASE")
 
 
 
 # debug debugger build
 if build_debug_debugger == "y":
-	colors.printc("yellow", "configuring tamarin for DEBUG_DEBUGGER build...")
+	colors.println("y", "configuring tamarin for DEBUG_DEBUGGER build...")
 
 	os.system("../configure.py --enable-debug --enable-debugger")
 
-	colors.printc("yellow", "compiling tamarin...")
+	colors.println("y", "compiling tamarin...")
 	os.system("make clean")
 	os.system("make")
 
@@ -41,11 +50,11 @@ if build_debug_debugger == "y":
 
 # debug build
 if build_debug == "y":
-	colors.printc("yellow", "configuring tamarin for DEBUG build...")
+	colors.println("y", "configuring tamarin for DEBUG build...")
 
 	os.system("../configure.py --enable-debug")
 
-	colors.printc("yellow", "compiling tamarin...")
+	colors.println("y", "compiling tamarin...")
 	os.system("make clean")
 	os.system("make")
 
@@ -58,11 +67,11 @@ if build_debug == "y":
 
 # release debugger build
 if build_release_debugger == "y":
-	colors.printc("yellow", "configuring tamarin for RELEASE_DEBUGGER build...")
+	colors.println("y", "configuring tamarin for RELEASE_DEBUGGER build...")
 
 	os.system("../configure.py --enable-debugger")
 
-	colors.printc("yellow", "compiling tamarin...")
+	colors.println("y", "compiling tamarin...")
 	os.system("make clean")
 	os.system("make")
 
@@ -74,10 +83,10 @@ if build_release_debugger == "y":
 
 # release build
 if build_release == "y":
-	colors.printc("yellow", "configuring tamarin for RELEASE build...")
+	colors.println("y", "configuring tamarin for RELEASE build...")
 
 	os.system("../configure.py")
 
-	colors.printc("yellow", "compiling tamarin...")
+	colors.println("y", "compiling tamarin...")
 	os.system("make clean")
 	os.system("make")

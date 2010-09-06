@@ -46,6 +46,7 @@ if(UNIX)
 		${tamarin_path}/VMPI/PosixPortUtils.cpp
 		${tamarin_path}/VMPI/MMgcPortUnix.cpp
 		${tamarin_path}/VMPI/ThreadsPosix.cpp
+		${tamarin_path}/VMPI/UnixDebugUtils.cpp
 	)
 endif()
 

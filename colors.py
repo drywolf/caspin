@@ -11,24 +11,30 @@ if os.name == "posix":
 	YELLOW = '\033[93m'
 	WHITE = '\033[0m'
 	
-	def set_color(color):
-		if color == "red":
-			print RED,
+	def get_color_code(color):
+		if color == "r":
+			return RED
 		
-		elif color == "blue":
-			print BLUE,
-
-		elif color == "green":
-			print GREEN,
+		elif color == "g":
+			return GREEN
 		
-		elif color == "yellow":
-			print YELLOW,
+		elif color == "b":
+			return BLUE
 		
-		elif color == "white":
-			print WHITE,
+		elif color == "y":
+			return YELLOW
 		
-		elif color == "gray":
-			print WHITE,
+		elif color == "w":
+			return WHITE
+		
+		else:
+			return WHITE
+	
+	def printf(color, text):
+		sys.stdout.write(get_color_code(color) + text + get_color_code("d"))
+	
+	def println(color, text):
+		sys.stdout.write(get_color_code(color) + text + get_color_code("d") + '\r\n')
 
 elif os.name == "nt":
 	STD_INPUT_HANDLE = -10
@@ -49,33 +55,37 @@ elif os.name == "nt":
 	std_out_handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
 
 	def set_color(color):
-		if color == "red":
+		if color == "r":
 			ctypes.windll.kernel32.SetConsoleTextAttribute(std_out_handle, FOREGROUND_RED | FOREGROUND_INTENSITY)
 		
-		elif color == "green":
+		elif color == "g":
 			ctypes.windll.kernel32.SetConsoleTextAttribute(std_out_handle, FOREGROUND_GREEN | FOREGROUND_INTENSITY)
 		
-		elif color == "blue":
+		elif color == "b":
 			ctypes.windll.kernel32.SetConsoleTextAttribute(std_out_handle, FOREGROUND_BLUE | FOREGROUND_INTENSITY)
 		
-		elif color == "yellow":
+		elif color == "y":
 			ctypes.windll.kernel32.SetConsoleTextAttribute(std_out_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY)
 		
-		elif color == "white":
+		elif color == "w":
 			ctypes.windll.kernel32.SetConsoleTextAttribute(std_out_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY)
 		
-		elif color == "gray":
+		elif color == "d":
 			ctypes.windll.kernel32.SetConsoleTextAttribute(std_out_handle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE)
-
-else:
-	def set_color(color):
-		return
 	
-def end_color():
-	return set_color("gray")
+	def printf(color, text):
+		set_color(color)
+		print text,
+		set_color("d")
+	
+	def println(color, text):
+		set_color(color)
+		print text
+		set_color("d")
+	
+else:
+	def printf(color, text):
+		print text,
 
-def printc(color, text):
-	set_color(color)
-	print text,
-	end_color()
-	print ""
+	def println(color, text):
+		print text

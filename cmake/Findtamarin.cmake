@@ -126,42 +126,46 @@ endif(WIN32)
 
 if(UNIX)
 
-	# tamarin libraries
+	# tamarin default libraries
 	find_library(tamarin_avmplus_lib	NAMES avmplus	PATHS ${tamarin_path}/bin)
 	find_library(tamarin_mmgc_lib		NAMES MMgc		PATHS ${tamarin_path}/bin)
-	find_library(tamarin_zlib_lib		NAMES zlib		PATHS ${tamarin_path}/bin)
-	
+
+	# tamarin debugger libraries
+	find_library(tamarin_avmplus_debugger_lib	NAMES avmplus_debugger	PATHS ${tamarin_path}/bin)
+	find_library(tamarin_mmgc_debugger_lib		NAMES MMgc_debugger		PATHS ${tamarin_path}/bin)
+
 	set (tamarin_libs
 		${tamarin_avmplus_lib}
 		${tamarin_mmgc_lib}
-		${tamarin_zlib_lib}
 		pthread
 	)
 	
 	set (tamarin_debugger_libs
-		${tamarin_avmplus_lib}
-		${tamarin_mmgc_lib}
-		${tamarin_zlib_lib}
+		${tamarin_avmplus_debugger_lib}
+		${tamarin_mmgc_debugger_lib}
 		pthread
 	)
 endif()
 
+# try to find the tamarin headers
+find_path(tamarin_include_base NAMES core/avmplus.h PATHS ${tamarin_path})
+
 # the tamarin include directories
 set (tamarin_include_dirs
-	${tamarin_path}/core
-	${tamarin_path}/VMPI
-	${tamarin_path}/platform
-	${tamarin_path}/MMgc
-	${tamarin_path}/eval
-	${tamarin_path}/other-licenses/zlib
-	${tamarin_path}/shell
-	${tamarin_path}/extensions
+	${tamarin_include_base}/core
+	${tamarin_include_base}/VMPI
+	${tamarin_include_base}/platform
+	${tamarin_include_base}/MMgc
+	${tamarin_include_base}/eval
+	${tamarin_include_base}/other-licenses/zlib
+	${tamarin_include_base}/shell
+	${tamarin_include_base}/extensions
 )
 
 # found tamarin successfully
-if(tamarin_include_dirs AND tamarin_libs AND tamarin_debugger_libs)
+if(tamarin_include_base AND tamarin_libs AND tamarin_debugger_libs)
 	set(tamarin_found TRUE)
-endif(tamarin_include_dirs AND tamarin_libs AND tamarin_debugger_libs)
+endif(tamarin_include_base AND tamarin_libs AND tamarin_debugger_libs)
 
 # report find result
 if(tamarin_found)
