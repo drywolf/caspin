@@ -39,7 +39,7 @@ set (include_dirs
 )
 
 # read the source files list
-include (source_files)
+include (minimal_src_files)
 
 #-----------------------------------------------------------------------
 # BUILD SETTINGS & COMPILATION
@@ -68,6 +68,20 @@ endif()
 
 # add the sample
 add_executable (minimal ${file_root})
+
+# automatically update the source files list
+auto_rebuild_src_files (minimal)
+
+# the path that contains the AS3 files for this sample
+set (as3_dir ${CMAKE_SOURCE_DIR}/samples/minimal/as3)
+
+# automatically compile the sample AS3 files to ABC if necessary
+add_custom_command (
+	OUTPUT ${as3_dir}/minimal.abc
+	MAIN_DEPENDENCY ${as3_dir}/minimal.as
+	WORKING_DIRECTORY ${as3_dir}
+	COMMAND ${as3_dir}/build.py
+)
 
 # enable the tamarin debugger
 if(sample_MINIMAL_use_runtime_debugger)

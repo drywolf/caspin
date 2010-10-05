@@ -1,25 +1,56 @@
 #!/usr/bin/env python
 
-import os;
-import sys;
-import shutil;
+import os
+import shutil
+import sys
 
 # the CASPIN_HOME environment variable
 caspin_home = os.getenv("CASPIN_HOME")
 
-# base command for invoking nativegen.py (automatically includes the tamarin "builtin.abc")
-cmd = "python " + caspin_home + "/tamarin/utils/nativegen.py " + caspin_home + "/tamarin/core/builtin.abc ";
+# the input filename (without file extension)
+infile = sys.argv[1]
+infile_abc = infile + ".abc"
+outfile_cpp = "../src/" + infile + ".cpp"
+outfile_h = "../include/" + infile + ".h"
 
-# concatenate all arguments except for the first one
-for i in range(2, len(sys.argv)):
-	cmd += sys.argv[i] + " ";
+infile_mod_date = 0
+
+# get the modification timestamp of the input file
+if os.path.exists(infile_abc):
+	infile_mod_date = os.path.getmtime(infile_abc)
+
+# base command for invoking nativegen.py (automatically includes the tamarin "builtin.abc")
+cmd = "python " + caspin_home + "/tamarin/utils/nativegen.py " + caspin_home + "/tamarin/core/builtin.abc "
+
+outfile_mod_date = -1
+
+# get the modification timestamps of the output files
+if os.path.exists(outfile_cpp):
+	outfile_mod_date = os.path.getmtime(outfile_cpp)
+	
+if os.path.exists(outfile_h):
+	mod_date = os.path.getmtime(outfile_h)
+	if mod_date > outfile_mod_date:
+		outfile_mod_date = mod_date
+
+gen_required = infile_mod_date >= outfile_mod_date
+
+# only continue if we need to
+if gen_required:
+	print "code generation is required!"
+else:
+	print "code generation is not required, skipping..."
+	exit()
 
 # use the first argument as output filename
-cmd += sys.argv[1] + ".abc";
+cmd += infile_abc
 
 # generate the C++ glue code from .abc files
-os.system(cmd);
+os.system(cmd)
 
 # rename and move the cpp/h files
-shutil.move(sys.argv[1] + ".cpp2", "../src/" + sys.argv[1] + ".cpp");
-shutil.move(sys.argv[1] + ".h2", "../include/" + sys.argv[1] + ".h");
+if os.path.exists(infile + ".cpp2"):
+	shutil.move(infile + ".cpp2", outfile_cpp)
+
+if os.path.exists(infile + ".h2"):
+	shutil.move(infile + ".h2", outfile_h)

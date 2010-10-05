@@ -38,6 +38,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include "cspVmCore.h"
 #include "cspNativePackage.h"
 #include "cspOutputLogger.h"
+#include "cspScriptDefinition.h"
 
 #include "FileInputStream.h"
 
@@ -71,10 +72,13 @@ namespace csp
 	//-----------------------------------------------------------------------
 	VmCore::VmCore(MMgc::GC* gc) 
 		: avmplus::AvmCore(gc), 
-		mUserData(NULL)
+		mUserData(NULL), 
+		mNextPackageID(0)
 	{
 		mOutputLogger = new (gc) OutputLogger;
 		setConsoleStream(mOutputLogger);
+
+		mArgumentArray = new Atom[128];
 
 		const char* uris[] = {"",};
 		const int32_t api_compat [] = {0x1,};
@@ -95,6 +99,7 @@ namespace csp
 	VmCore::~VmCore()
 	{
 		MMGC_GCENTER(GetGC());
+		delete[] mArgumentArray;
 		delete mOutputLogger;
 	}
 	//-----------------------------------------------------------------------
@@ -127,9 +132,10 @@ namespace csp
 		}
 	}
 	//-----------------------------------------------------------------------
-	void VmCore::addFunctions(NativePackageBase* package)
+	int VmCore::addPackage(NativePackageBase* package)
 	{
 		mPackages.push_back(package);
+		return mNextPackageID++;
 	}
 	//-----------------------------------------------------------------------
 	bool VmCore::initializePackages()
@@ -143,7 +149,7 @@ namespace csp
 			const BugCompatibility* bugCompatibility = mToplevel->abcEnv()->codeContext()->bugCompatibility();
 			mCodeContext = new(GetGC()) CodeContext(mToplevel->domainEnv(), bugCompatibility);
 
-			NativePackageBaseList::iterator it = mPackages.begin();
+			NativePackageList::iterator it = mPackages.begin();
 			for( ; it != mPackages.end(); ++it)
 			{
 				handleActionPool((*it)->getPool(), mToplevel, mCodeContext);
@@ -155,6 +161,9 @@ namespace csp
 			// Return a new DomainEnv for the user code
 			mDomainEnv = DomainEnv::newDomainEnv(this, mDomain, mToplevel->domainEnv());
 
+			// an internal array to store stickied AS3 objects
+			mStickyRefArray = static_cast<ArrayObject*>(createObject(avmplus::NativeID::abcclass_Array));
+
 			return true;
 		}
 		CATCH(Exception* exception)
@@ -162,48 +171,37 @@ namespace csp
 			printException(exception);
 			return false;
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	ClassDef VmCore::getDefinition(avmplus::Stringp class_name, avmplus::Stringp package)
+	ScriptDefinition VmCore::getDefinition(avmplus::Stringp identifier, avmplus::Stringp package)
 	{
-		ClassDef result(this, class_name, package);
+		MMGC_GCENTER(GetGC());
+
+		ScriptDefinition result(this, identifier, package);
 
 		TRY(this, kCatchAction_ReportAsError)
 		{
-			Namespacep ns = mToplevel->getDefaultNamespace();
-
-			if(package)
-			{
-				if(package->length())
-				{
-					ns = internNamespace(newNamespace(package));
-				}
-			}
-
-			Multiname mn(ns, class_name);
-
-			ScriptEnv* script = domainMgr()->findScriptEnvInDomainEnvByMultiname(mDomainEnv, mn);
+			avmplus::ScriptEnv* script = domainMgr()->findScriptEnvInDomainEnvByMultiname(mDomainEnv, result.multi_name);
 
 			if(script == (ScriptEnv*)BIND_AMBIGUOUS)
 			{
-				mToplevel->throwReferenceError(kAmbiguousBindingError, mn);
+				mToplevel->throwReferenceError(kAmbiguousBindingError, result.multi_name);
 			}
 
 			if(script == (ScriptEnv*)BIND_NONE)
 			{
-				mToplevel->throwReferenceError(kUndefinedVarError, mn);
+				mToplevel->throwReferenceError(kUndefinedVarError, result.multi_name);
 			}
 
 			if(script == NULL)
 			{
 				std::stringstream str;
-				str << "Unable to find class \"" << class_name << "\"";
+				str << "Unable to find script definition \"" << identifier << "\"";
 				throwException(str.str());
-				return result;
 			}
 
 			if(script->global == NULL)
@@ -212,66 +210,204 @@ namespace csp
 				script->coerceEnter(script->global->atom());
 			}
 
-			result.scriptEnv = script;
+			result.as3_env = script;
 		}
 		CATCH(Exception* exception)
 		{
 			printException(exception);
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
 		return result;
 	}
 	//-----------------------------------------------------------------------
-	ClassDef VmCore::getDefinition(const String& class_name, const String& package)
+	ScriptDefinition VmCore::getDefinition(const String& identifier, const String& package)
 	{
 		MMGC_GCENTER(GetGC());
 
-		Stringp cls_nm = newString(class_name.c_str());
+		Stringp id = newString(identifier.c_str());
 		Stringp pckg = newString(package.c_str());
 
-		return getDefinition(cls_nm, pckg);
+		return getDefinition(id, pckg);
 	}
 	//-----------------------------------------------------------------------
-	avmplus::ScriptObject* VmCore::createObject(const ClassDef& definition, ArgumentList args)
+	ScriptDefinition VmCore::getMethodDefinition(avmplus::ScriptObject* object, avmplus::Stringp method_name)
+	{
+		VmCore* core = CSP_CORE_EX(object->core());
+		GC* gc = core->GetGC();
+
+		MMGC_GCENTER(gc);
+
+		ScriptDefinition result;
+
+		TRY(core, kCatchAction_ReportAsError)
+		{
+			// search for the method binding at the object
+			avmplus::Binding method_bind = object->traits()->getTraitsBindings()->findBinding(method_name);
+
+			if(avmplus::AvmCore::isMethodBinding(method_bind))
+			{
+				// found it, get the MethodEnv for the method
+				result.method_env = object->vtable->methods[avmplus::AvmCore::bindingToMethodId(method_bind)];
+			}
+			else
+			{
+				core->throwException("Invalid method binding at VmCore::getMethodDefinition(...)");
+			}
+		}
+		CATCH(Exception* exception)
+		{
+			core->printException(exception);
+		}
+		END_CATCH;
+		END_TRY;
+
+		return result;
+	}
+	//-----------------------------------------------------------------------
+	ScriptDefinition VmCore::getMethodDefinition(avmplus::ScriptObject* object, const String& method_name)
+	{
+		MMGC_GCENTER(object->gc());
+
+		VmCore* core = CSP_CORE_EX(object->core());
+		Stringp mthd_nm = core->newString(method_name.c_str());
+
+		return getMethodDefinition(object, mthd_nm);
+	}
+	//-----------------------------------------------------------------------
+	Atom VmCore::callGlobalFunction(const ScriptDefinition& definition, ArgumentList args)
 	{
 		MMGC_GCENTER(GetGC());
 
-		avmplus::Atom* atom_args = new avmplus::Atom[args.size()+1];
+		avmplus::Atom result = nullObjectAtom;
 
 		TRY(this, kCatchAction_ReportAsError)
 		{
-			ScriptEnv* script = definition.scriptEnv;
-			Atom global_atom = mToplevel->getproperty(script->global->atom(), &definition.multiName, script->global->vtable);
-			ClassClosure* class_closure = (ClassClosure*)AvmCore::atomToScriptObject(global_atom);
+			if(definition.as3_env == NULL)
+			{
+				throwException("Invalid script definition for global function");
+			}
 
-			atom_args[0] = nullObjectAtom;
+			ScriptEnv* script = definition.as3_env;
+			Atom atom = mToplevel->getproperty(script->global->atom(), &definition.multi_name, script->global->vtable);
+			ClassClosure* class_closure = (ClassClosure*)AvmCore::atomToScriptObject(atom);
+
+			mArgumentArray[0] = class_closure->atom();
 
 			for(size_t i=0; i<args.size(); ++i)
 			{
-				atom_args[i+1] = args.at(i);
+				mArgumentArray[i+1] = args.at(i);
 			}
 
-			Atom new_atom = class_closure->construct(args.size(), atom_args);
-
-			delete[] atom_args;
-
-			avmplus::ScriptObject* mObject = AvmCore::atomToScriptObject(new_atom);
-
-			// otherwise it would be immediately collected by the GC
-			mObject->IncrementRef();
-
-			return mObject;
+			result = class_closure->call(args.size(), mArgumentArray);
 		}
 		CATCH(Exception* exception)
 		{
 			printException(exception);
-			delete[] atom_args;
-			return NULL;
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
+
+		return result;
+	}
+	//-----------------------------------------------------------------------
+	Atom VmCore::callGlobalFunction(avmplus::Stringp function_name, avmplus::Stringp package, ArgumentList args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		ScriptDefinition def = getDefinition(function_name, package);
+		return callGlobalFunction(def, args);
+	}
+	//-----------------------------------------------------------------------
+	Atom VmCore::callGlobalFunction(const String& function_name, const String& package, ArgumentList args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		Stringp fn_name = newString(function_name.c_str());
+		Stringp pckg = newString(package.c_str());
+
+		return callGlobalFunction(fn_name, pckg, args);
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom VmCore::callStaticFunction(avmplus::Stringp class_name, avmplus::Stringp function_name, avmplus::Stringp package, ArgumentList args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		avmplus::Atom result = nullObjectAtom;
+
+		TRY(this, kCatchAction_ReportAsError)
+		{
+			ScriptDefinition def = getDefinition(class_name, package);
+
+			if(def.as3_env == NULL)
+			{
+				throwException("Unable to find class");
+			}
+
+			ScriptEnv* script = def.as3_env;
+			Atom atom = mToplevel->getproperty(script->global->atom(), &def.multi_name, script->global->vtable);
+			ClassClosure* class_closure = (ClassClosure*)AvmCore::atomToScriptObject(atom);
+
+			Binding binding = class_closure->traits()->getTraitsBindings()->findBinding(function_name);
+
+			if(AvmCore::isMethodBinding(binding))
+			{
+				MethodEnv* method = class_closure->vtable->methods[AvmCore::bindingToMethodId(binding)];
+
+				mArgumentArray[0] = class_closure->atom();
+
+				for(size_t i=0; i<args.size(); ++i)
+				{
+					mArgumentArray[i+1] = args.at(i);
+				}
+
+				result = method->coerceEnter(args.size(), mArgumentArray);
+			}
+			else
+			{
+				throwException("Unable to find static function at class");
+			}
+		}
+		CATCH(Exception* exception)
+		{
+			printException(exception);
+		}
+		END_CATCH;
+		END_TRY;
+
+		return result;
+	}
+	//-----------------------------------------------------------------------
+	Atom VmCore::callStaticFunction(const String& class_name, const String& function_name, const String& package, ArgumentList args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		Stringp cls_nm = newString(class_name.c_str());
+		Stringp fn_nm = newString(function_name.c_str());
+		Stringp pckg = newString(package.c_str());
+
+		return callStaticFunction(cls_nm, fn_nm, pckg, args);
+	}
+	//-----------------------------------------------------------------------
+	avmplus::ScriptObject* VmCore::createObject(const ScriptDefinition& definition, ArgumentList args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		TRY(this, kCatchAction_ReportAsError)
+		{
+			ScriptEnv* script = definition.as3_env;
+			Atom global_atom = mToplevel->getproperty(script->global->atom(), &definition.multi_name, script->global->vtable);
+			ClassClosure* class_closure = (ClassClosure*)AvmCore::atomToScriptObject(global_atom);
+
+			return constructObject(class_closure, args);
+		}
+		CATCH(Exception* exception)
+		{
+			printException(exception);
+		}
+		END_CATCH;
+		END_TRY;
 
 		return NULL;
 	}
@@ -280,94 +416,159 @@ namespace csp
 	{
 		MMGC_GCENTER(GetGC());
 
-		avmplus::Atom* atom_args = new avmplus::Atom[args.size()+1];
-
-		TRY(this, kCatchAction_ReportAsError)
-		{
-			ClassDef def = getDefinition(class_name, package);
-
-			ScriptEnv* script = def.scriptEnv;
-			Atom global_atom = mToplevel->getproperty(script->global->atom(), &def.multiName, script->global->vtable);
-			ClassClosure* class_closure = (ClassClosure*)AvmCore::atomToScriptObject(global_atom);
-
-			atom_args[0] = nullObjectAtom;
-
-			for(size_t i=0; i<args.size(); ++i)
-			{
-				atom_args[i+1] = args.at(i);
-			}
-
-			Atom new_atom = class_closure->construct(args.size(), atom_args);
-
-			delete[] atom_args;
-
-			avmplus::ScriptObject* mObject = AvmCore::atomToScriptObject(new_atom);
-
-			// otherwise it would be immediately collected by the GC
-			mObject->IncrementRef();
-
-			return mObject;
-		}
-		CATCH(Exception* exception)
-		{
-			printException(exception);
-			delete[] atom_args;
-			return NULL;
-		}
-		END_CATCH
-		END_TRY
-
-		return NULL;
+		ScriptDefinition def = getDefinition(class_name, package);
+		return createObject(def, args);
 	}
 	//-----------------------------------------------------------------------
 	avmplus::ScriptObject* VmCore::createObject(const String& class_name, const String& package, ArgumentList args)
 	{
 		MMGC_GCENTER(GetGC());
 
-		Stringp cls_nm = newString(class_name.c_str());
-		Stringp pckg = newString(package.c_str());
-
-		return createObject(cls_nm, pckg, args);
+		ScriptDefinition def = getDefinition(class_name, package);
+		return createObject(def, args);
 	}
 	//-----------------------------------------------------------------------
-	avmplus::Atom VmCore::callObjectFunction(avmplus::ScriptObject* obj, const String& function_name, ArgumentList args)
+	avmplus::ScriptObject* VmCore::createObject(const uint& native_class_id, const uint& package_id, ArgumentList args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		TRY(this, kCatchAction_ReportAsError)
+		{
+			if(package_id > mPackages.size()-1)
+			{
+				throwException("Error at 'VmCore::createObject(...)': package_id out of bounds");
+			}
+
+			NativePackageBase* package = mPackages[package_id];
+
+			if(native_class_id > package->getNumClasses()-1)
+			{
+				throwException("Error at 'VmCore::createObject(...)': native_class_id out of bounds");
+			}
+
+			ClassClosure* class_closure = mToplevel->findClassInPool(native_class_id, package->getPool());
+
+			return constructObject(class_closure, args);
+		}
+		CATCH(Exception* exception)
+		{
+			printException(exception);
+		}
+		END_CATCH;
+		END_TRY;
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	avmplus::ScriptObject* VmCore::createObject(const uint& toplevel_class_id, ArgumentList args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		TRY(this, kCatchAction_ReportAsError)
+		{
+			if(toplevel_class_id > avmplus::NativeID::builtin_abc_class_count-1)
+			{
+				throwException("Error at 'VmCore::createObject(...)': toplevel_class_id out of bounds");
+				return NULL;
+			}
+
+			ClassClosure* class_closure = mToplevel->getBuiltinClass(toplevel_class_id);
+
+			return constructObject(class_closure, args);
+		}
+		CATCH(Exception* exception)
+		{
+			printException(exception);
+		}
+		END_CATCH;
+		END_TRY;
+
+		return NULL;
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom VmCore::callObjectFunction2(avmplus::ScriptObject* obj, const ScriptDefinition& method_definition, Atom* args, uint num_args)
 	{
 		MMGC_GCENTER(obj->gc());
 
-		avmplus::Atom* atom_args = new avmplus::Atom[args.size()+1];
+		avmplus::Atom result = nullObjectAtom;
 
 		TRY(obj->core(), kCatchAction_ReportAsError)
 		{
-			avmplus::Stringp func = CSP_CORE_EX(obj->core())->newString(function_name.c_str());
+			MethodEnv* method = method_definition.method_env;
 
-			// search for the function binding at the object
-			avmplus::Binding func_bind = obj->traits()->getTraitsBindings()->findBinding(func);
-			if(avmplus::AvmCore::isMethodBinding(func_bind))
+			if(method == NULL)
 			{
-				// found it, get the MethodEnv for the function and call it
-				avmplus::MethodEnv* method = obj->vtable->methods[avmplus::AvmCore::bindingToMethodId(func_bind)];
-
-				atom_args[0] = obj->atom();
-
-				for(size_t i=0; i<args.size(); ++i)
-				{
-					atom_args[i+1] = args.at(i);
-				}
-
-				avmplus::Atom result = method->coerceEnter(args.size(), atom_args);
-				delete[] atom_args;
-				return result;
+				CSP_CORE_EX(obj->core())->throwException("Invalid method definition at VmCore::callObjectFunction(...)");
 			}
+
+			if(args == NULL)
+			{
+				Atom thys = obj->atom();
+				result = method->coerceEnter(0, &thys);
+			}
+			else
+				result = method->coerceEnter(num_args, args);
 		}
 		CATCH(avmplus::Exception* exception)
 		{
 			CSP_CORE_EX(obj->core())->printException(exception);
-			delete[] atom_args;
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
-		return nullObjectAtom;
+		return result;
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom VmCore::callObjectFunction2(avmplus::ScriptObject* obj, avmplus::Stringp function_name, Atom* args, uint num_args)
+	{
+		MMGC_GCENTER(obj->gc());
+
+		ScriptDefinition def = getMethodDefinition(obj, function_name);
+		return callObjectFunction2(obj, def, args, num_args);
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom VmCore::callObjectFunction2(avmplus::ScriptObject* object, const String& function_name, Atom* args, uint num_args)
+	{
+		MMGC_GCENTER(object->gc());
+
+		ScriptDefinition def = getMethodDefinition(object, function_name);
+		return callObjectFunction2(object, def, args, num_args);
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom VmCore::callObjectFunction(avmplus::ScriptObject* obj, const ScriptDefinition& method_definition, ArgumentList args)
+	{
+		MMGC_GCENTER(obj->gc());
+
+		Atom* atom_args = new Atom[args.size()+1];
+
+		atom_args[0] = obj->atom();
+
+		for(size_t i=0; i<args.size(); ++i)
+		{
+			atom_args[i+1] = args.at(i);
+		}
+
+		Atom result = callObjectFunction2(obj, method_definition, atom_args, args.size());
+
+		delete[] atom_args;
+
+		return result;
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom VmCore::callObjectFunction(avmplus::ScriptObject* obj, avmplus::Stringp function_name, ArgumentList args)
+	{
+		MMGC_GCENTER(obj->gc());
+
+		ScriptDefinition def = getMethodDefinition(obj, function_name);
+		return callObjectFunction(obj, def, args);
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Atom VmCore::callObjectFunction(avmplus::ScriptObject* object, const String& function_name, ArgumentList args)
+	{
+		MMGC_GCENTER(object->gc());
+
+		ScriptDefinition def = getMethodDefinition(object, function_name);
+		return callObjectFunction(object, def, args);
 	}
 	//-----------------------------------------------------------------------
 	bool VmCore::setSlotObject(avmplus::ScriptObject* obj, const String& slot_name, avmplus::ScriptObject* slot_obj)
@@ -391,8 +592,8 @@ namespace csp
 			CSP_CORE_EX(obj->core())->printException(exception);
 			return false;
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
 		return true;
 	}
@@ -418,8 +619,8 @@ namespace csp
 			CSP_CORE_EX(obj->core())->printException(exception);
 			return NULL;
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
 		return NULL;
 	}
@@ -432,7 +633,6 @@ namespace csp
 
 		TRY(core, kCatchAction_ReportAsError)
 		{
-			std::cout << "init slots for: " << core->stringFromAS3(obj->traits()->name()) << std::endl;
 			size_t slot_count = obj->traits()->getTraitsBindings()->slotCount;
 
 			for(size_t i=0; i<slot_count; ++i)
@@ -444,8 +644,6 @@ namespace csp
 					continue;
 				}
 
-				std::cout << (slot_traits->builtinType) << std::endl;
-				std::cout << "DEBUG: " << core->stringFromAS3(slot_traits->name()) << " -> " << core->stringFromAS3(slot_traits->ns()->getURI()) << std::endl;
 				avmplus::ScriptObject* slot_obj = core->createObject(slot_traits->name(), slot_traits->ns()->getURI());
 
 				if(recursive)
@@ -460,8 +658,39 @@ namespace csp
 		{
 			CSP_CORE_EX(obj->core())->printException(exception);
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
+	}
+	//-----------------------------------------------------------------------
+	bool VmCore::stickyObject(avmplus::ScriptObject* object)
+	{
+		MMGC_GCENTER(GetGC());
+
+		StickyRefMap::iterator it = mStickyRefMap.find(object);
+		if(it == mStickyRefMap.end())
+		{
+			uint index = mStickyRefArray->get_length();
+			mStickyRefArray->setUintProperty(index, object->atom());
+			mStickyRefMap.insert(std::make_pair(object, index));
+			return true;
+		}
+
+		return false;
+	}
+	//-----------------------------------------------------------------------
+	bool VmCore::unstickyObject(avmplus::ScriptObject* object)
+	{
+		MMGC_GCENTER(GetGC());
+
+		StickyRefMap::iterator it = mStickyRefMap.find(object);
+		if(it != mStickyRefMap.end())
+		{
+			mStickyRefArray->delUintProperty(it->second);
+			mStickyRefMap.erase(it);
+			return true;
+		}
+
+		return false;
 	}
 	//-----------------------------------------------------------------------
 	const Atom& VmCore::scriptBoolean(const bool& value) const
@@ -532,13 +761,12 @@ namespace csp
 		return newStringUTF8(str.c_str());
 	}
 	//-----------------------------------------------------------------------
-	bool VmCore::parseFile(const String& filename)
+	bool VmCore::executeFile(const String& filename)
 	{
 		MMGC_GCENTER(GetGC());
 
 		TRY(this, kCatchAction_ReportAsError)
 		{
-			// TODO: only temporary placeholder, use own filestream instead ???
 			avmshell::FileInputStream f(filename.c_str());
 
 			bool isValid = f.valid() && ((uint64_t)f.length() < 0xFFFFFFFF); //currently we cannot read files > 4GB
@@ -569,8 +797,8 @@ namespace csp
 			printException(exception);
 			return false;
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
 		return true;
 	}
@@ -581,7 +809,7 @@ namespace csp
 
 		MMgc::GC* gc = mToplevel->gc();
 
-		ReadOnlyScriptBufferImpl* abcbuf = new (gc) ReadOnlyScriptBufferImpl((avmplus::byte*)buf, len);
+		ReadOnlyScriptBufferImpl* abcbuf = new (gc) ReadOnlyScriptBufferImpl((uint8_t*)buf, len);
 		ScriptBuffer code(abcbuf);
 
 		TRY(this, kCatchAction_ReportAsError)
@@ -602,8 +830,8 @@ namespace csp
 			printException(exception);
 			return false;
 		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
 		return true;
 	}
@@ -627,146 +855,8 @@ namespace csp
 			printException(exception);
 			return false;
 		}
-		END_CATCH
-		END_TRY
-
-		return true;
-	}
-	//-----------------------------------------------------------------------
-	bool VmCore::callGlobalFunction(const String& function_name, const String& package, ArgumentList args)
-	{
-		MMGC_GCENTER(GetGC());
-
-		Atom* atom_args = new Atom[args.size()+1];
-
-		TRY(this, kCatchAction_ReportAsError)
-		{
-			Stringp function_str = newString(function_name.c_str());
-			Namespacep ns = mToplevel->getDefaultNamespace();
-
-			if(package != "")
-			{
-				Stringp ns_str = newString(package.c_str());
-				ns = internNamespace(newNamespace(ns_str));
-			}
-
-			Multiname mn(ns, function_str);
-			ScriptEnv* script = domainMgr()->findScriptEnvInDomainEnvByMultiname(mDomainEnv, mn);
-
-			if (script == NULL)
-			{
-				String message = "Unable to find function \"" + function_name + "\"";
-				throwException(message);
-			}
-			else
-			{
-				if(script->global == NULL)
-				{
-					script->initGlobal();
-					Atom argv[1] = { script->global->atom() };
-					script->coerceEnter(0, argv);
-				}
-
-				Atom atom = mToplevel->getproperty(script->global->atom(), &mn, script->global->vtable);
-				ClassClosure* class_closure = (ClassClosure*)AvmCore::atomToScriptObject(atom);
-
-				atom_args[0] = class_closure->atom();
-
-				for(size_t i=0; i<args.size(); ++i)
-				{
-					atom_args[i+1] = args.at(i);
-				}
-
-				class_closure->call(args.size(), atom_args);
-				delete[] atom_args;
-			}
-		}
-		CATCH(Exception* exception)
-		{
-			printException(exception);
-			delete[] atom_args;
-			return false;
-		}
-		END_CATCH
-		END_TRY
-
-		return true;
-	}
-	//-----------------------------------------------------------------------
-	bool VmCore::callStaticFunction(const String& class_name, const String& function_name, const String& package, ArgumentList args)
-	{
-		MMGC_GCENTER(GetGC());
-
-		Atom* atom_args = new Atom[args.size()+1];
-
-		TRY(this, kCatchAction_ReportAsError)
-		{
-			Stringp clss_str = newString(class_name.c_str());
-			Namespacep ns = mToplevel->getDefaultNamespace();
-
-			if(package != "")
-			{
-				Stringp ns_str = newString(package.c_str());
-				ns = internNamespace(newNamespace(ns_str));
-			}
-
-			Multiname mn(ns, clss_str);
-			ScriptEnv* script = domainMgr()->findScriptEnvInDomainEnvByMultiname(mDomainEnv, mn);
-
-			if (script == NULL)
-			{
-				String message = "Unable to find class \"" + class_name + "\"";
-				throwException(message);
-			}
-			else
-			{
-				if(script->global == NULL)
-				{
-					script->initGlobal();
-					Atom argv[1] = { script->global->atom() };
-					script->coerceEnter(0, argv);
-				}
-
-				Atom atom = mToplevel->getproperty(script->global->atom(), &mn, script->global->vtable);
-				ClassClosure* class_closure = (ClassClosure*)AvmCore::atomToScriptObject(atom);
-
-				Stringp fnName = newString(function_name.c_str());
-				Binding binding = class_closure->traits()->getTraitsBindings()->findBinding(fnName);
-
-				if(AvmCore::isMethodBinding(binding))
-				{
-					MethodEnv* method = class_closure->vtable->methods[AvmCore::bindingToMethodId(binding)];
-
-					atom_args[0] = class_closure->atom();
-
-					for(size_t i=0; i<args.size(); ++i)
-					{
-						atom_args[i+1] = args.at(i);
-					}
-
-					method->coerceEnter(args.size(), atom_args);
-					delete[] atom_args;
-				}
-				else
-				{
-					String message = 
-						"Unable to find static function \"" + 
-						function_name + 
-						"\" inside class \"" + 
-						class_name + "\"";
-
-					throwException(message);
-				}
-			}
-		}
-		CATCH(Exception* exception)
-		{
-			printException(exception);
-			delete[] atom_args;
-			return false;
-		}
-		END_CATCH
-		END_TRY
+		END_CATCH;
+		END_TRY;
 
 		return true;
 	}
@@ -826,6 +916,7 @@ namespace csp
 	//-----------------------------------------------------------------------
 	void VmCore::throwException(const String& message)
 	{
+		MMGC_GCENTER(GetGC());
 		AvmCore::throwException(new (GetGC()) Exception(this, scriptString(message.c_str())));
 	}
 	//-----------------------------------------------------------------------
@@ -839,6 +930,38 @@ namespace csp
 	{
 		MMGC_GCENTER(GetGC());
 		return internString(newStringUTF16((wchar*)str));
+	}
+	//-----------------------------------------------------------------------
+	avmplus::ScriptObject* VmCore::constructObject(avmplus::ClassClosure* class_closure, ArgumentList& args)
+	{
+		MMGC_GCENTER(GetGC());
+
+		avmplus::ScriptObject* object = NULL;
+
+		TRY(this, kCatchAction_ReportAsError)
+		{
+			mArgumentArray[0] = nullObjectAtom;
+
+			for(size_t i=0; i<args.size(); ++i)
+			{
+				mArgumentArray[i+1] = args.at(i);
+			}
+
+			Atom object_atom = class_closure->construct(args.size(), mArgumentArray);
+
+			object = AvmCore::atomToScriptObject(object_atom);
+
+			// otherwise it would be immediately collected by the GC
+			object->IncrementRef();
+		}
+		CATCH(Exception* exception)
+		{
+			printException(exception);
+		}
+		END_CATCH;
+		END_TRY;
+
+		return object;
 	}
 	//-----------------------------------------------------------------------
 	avmplus::String* VmCore::readFileForEval(avmplus::String* referencingFilename, avmplus::String* filename)

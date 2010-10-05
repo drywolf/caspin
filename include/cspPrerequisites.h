@@ -81,26 +81,30 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #define CSP_CORE static_cast<csp::VmCore*>(core())
 #define CSP_CORE_EX(name) static_cast<csp::VmCore*>(name)
 
-#define CSP_CLASS_SLOTS(name) DECLARE_SLOTS_##name##Class
+#define CSP_CLASS_SLOTS(name) DECLARE_SLOTS_##name
 #define CSP_INST_SLOTS(name) DECLARE_SLOTS_##name
 
+/** A macro for adding the required class methods to an ActionScript 3 native class definition */
+#define CSP_CLASS_CREATE_INSTANCE(clazz, inst) \
+avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype) \
+{ \
+	return new (core()->GetGC(), ivtable->getExtraSize()) inst(ivtable, prototype); \
+}
+
 /** A macro for creating a native ActionScript 3 class definition */
-#define CSP_DEFINE_CLASS(name) \
-class name##Class : public avmplus::ClassClosure \
+#define CSP_DEFINE_CLASS(clazz, inst) \
+class clazz : public avmplus::ClassClosure \
 { \
 public: \
-	name##Class(avmplus::VTable* cvtable) : avmplus::ClassClosure(cvtable) \
+	clazz(avmplus::VTable* cvtable) : avmplus::ClassClosure(cvtable) \
 	{ \
-		AvmAssert(traits()->getSizeOfInstance() == sizeof(name##Class)); \
+		AvmAssert(traits()->getSizeOfInstance() == sizeof(inst)); \
 		createVanillaPrototype(); \
 	} \
 	\
-	avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype) \
-	{ \
-		return new (core()->GetGC(), ivtable->getExtraSize()) name(ivtable, prototype); \
-	} \
+	CSP_CLASS_CREATE_INSTANCE(clazz, inst); \
 	\
-	CSP_CLASS_SLOTS(name); \
+	CSP_CLASS_SLOTS(clazz); \
 }
 
 namespace MMgc
@@ -124,13 +128,14 @@ namespace csp
 	class NativePackageBase;
 	class OutputListener;
 	class OutputLogger;
+	class ScriptDefinition;
 	class VmCore;
 
+	typedef unsigned int uint;
 	typedef std::string String;
 	typedef std::wstring WString;
 	typedef std::vector<String> StringList;
 	typedef std::vector<avmplus::Atom> ArgumentList;
-	typedef std::vector<NativePackageBase*> NativePackageBaseList;
 }
 
 #endif

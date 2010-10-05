@@ -1,7 +1,7 @@
-diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
---- a/platform/win32/MMgc2008.vcproj
-+++ b/platform/win32/MMgc2008.vcproj
-@@ -1,7 +1,7 @@
+diff -r 95ff632db74b platform/win32/MMgc2008.vcproj
+--- a/platform/win32/MMgc2008.vcproj	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/MMgc2008.vcproj	Mon Sep 27 08:55:46 2010 +0200
+@@ -1,12 +1,12 @@
  <?xml version="1.0" encoding="Windows-1252"?>
  <VisualStudioProject
  	ProjectType="Visual C++"
@@ -10,7 +10,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  	Name="MMgc"
  	ProjectGUID="{B004A8CC-B3A9-4600-A1A9-EF1BBCF2434B}"
  	RootNamespace="MMgc"
-@@ -20,9 +20,6 @@
+ 	Keyword="Win32Proj"
+ 	TargetFrameworkVersion="131072"
+ 	>
+ 	<Platforms>
+ 		<Platform
+@@ -15,19 +15,16 @@
+ 		<Platform
+ 			Name="Windows Mobile 6 Professional SDK (ARMV4I)"
+ 		/>
+ 		<Platform
+ 			Name="x64"
  		/>
  	</Platforms>
  	<ToolFiles>
@@ -20,7 +30,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  	</ToolFiles>
  	<Configurations>
  		<Configuration
-@@ -40,9 +37,6 @@
+ 			Name="Debug|Win32"
+ 			OutputDirectory="obj_9/$(ProjectName)/$(ConfigurationName)"
+ 			IntermediateDirectory="obj_9/$(ProjectName)/$(ConfigurationName)"
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+@@ -35,36 +32,33 @@
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+ 			/>
+ 			<Tool
  				Name="VCCustomBuildTool"
  			/>
  			<Tool
@@ -30,7 +50,16 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  				Name="VCXMLDataGeneratorTool"
  			/>
  			<Tool
-@@ -59,7 +53,7 @@
+ 				Name="VCWebServiceProxyGeneratorTool"
+ 			/>
+ 			<Tool
+ 				Name="VCMIDLTool"
+ 			/>
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\VMPI;..\..\MMgc;..\..\core;..\..\eval;..\..\platform;..\..\shell"
+ 				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;WIN32;AVMSHELL_BUILD;_CRT_SECURE_NO_DEPRECATE"
  				MinimalRebuild="true"
  				ExceptionHandling="0"
  				BasicRuntimeChecks="3"
@@ -39,7 +68,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  				TreatWChar_tAsBuiltInType="false"
  				UsePrecompiledHeader="2"
  				PrecompiledHeaderThrough="MMgc.h"
-@@ -99,6 +93,347 @@
+ 				ProgramDataBaseFileName="$(IntDir)/MMgc.pdb"
+ 				BrowseInformation="0"
+ 				WarningLevel="4"
+ 				WarnAsError="true"
+ 				DebugInformationFormat="3"
+@@ -94,16 +88,357 @@
+ 			<Tool
+ 				Name="VCFxCopTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -387,7 +426,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  			Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -185,81 +520,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -180,91 +515,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -469,7 +518,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  			Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -348,76 +608,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -343,86 +603,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -546,7 +605,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  			Name="Release_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -499,79 +689,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -494,89 +684,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -626,7 +695,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  			Name="Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -658,69 +775,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="0"
+ 			>
+ 			<Tool
+@@ -653,79 +770,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -696,7 +775,17 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  			Name="VTune|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -808,80 +862,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="0"
+ 			>
+ 			<Tool
+@@ -803,90 +857,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -777,10 +866,20 @@ diff --git a/platform/win32/MMgc2008.vcproj b/platform/win32/MMgc2008.vcproj
  			Name="MemoryProfiler|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-diff --git a/platform/win32/avm2010.vcxproj b/platform/win32/avm2010.vcxproj
---- a/platform/win32/avm2010.vcxproj
-+++ b/platform/win32/avm2010.vcxproj
-@@ -671,13 +671,13 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+diff -r 95ff632db74b platform/win32/avm2010.vcxproj
+--- a/platform/win32/avm2010.vcxproj	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/avm2010.vcxproj	Mon Sep 27 08:55:46 2010 +0200
+@@ -666,23 +666,23 @@
+     </CustomBuild>
+   </ItemGroup>
+   <PropertyGroup Label="Globals">
+     <ProjectGuid>{CA852ACB-0BC8-4B48-A52A-FA48D332C361}</ProjectGuid>
+     <RootNamespace>avm2010</RootNamespace>
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -796,7 +895,17 @@ diff --git a/platform/win32/avm2010.vcxproj b/platform/win32/avm2010.vcxproj
      <UseDebugLibraries>true</UseDebugLibraries>
      <WholeProgramOptimization>false</WholeProgramOptimization>
      <CharacterSet>Unicode</CharacterSet>
-@@ -695,13 +695,13 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+     <WholeProgramOptimization>false</WholeProgramOptimization>
+@@ -690,23 +690,23 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Debugger|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+     <WholeProgramOptimization>false</WholeProgramOptimization>
      <CharacterSet>Unicode</CharacterSet>
    </PropertyGroup>
    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -812,10 +921,20 @@ diff --git a/platform/win32/avm2010.vcxproj b/platform/win32/avm2010.vcxproj
      <UseDebugLibraries>false</UseDebugLibraries>
      <WholeProgramOptimization>false</WholeProgramOptimization>
      <CharacterSet>Unicode</CharacterSet>
-diff --git a/platform/win32/avmplus2008.sln b/platform/win32/avmplus2008.sln
---- a/platform/win32/avmplus2008.sln
-+++ b/platform/win32/avmplus2008.sln
-@@ -122,35 +122,27 @@
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+     <WholeProgramOptimization>false</WholeProgramOptimization>
+diff -r 95ff632db74b platform/win32/avmplus2008.sln
+--- a/platform/win32/avmplus2008.sln	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/avmplus2008.sln	Mon Sep 27 08:55:46 2010 +0200
+@@ -117,45 +117,37 @@ Global
+ 		{437E43D2-ED2D-406B-88DB-B5940F838AE8}.VTune|Win32.ActiveCfg = VTune|Win32
+ 		{437E43D2-ED2D-406B-88DB-B5940F838AE8}.VTune|Win32.Build.0 = VTune|Win32
+ 		{437E43D2-ED2D-406B-88DB-B5940F838AE8}.VTune|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = VTune|Windows Mobile 6 Professional SDK (ARMV4I)
+ 		{437E43D2-ED2D-406B-88DB-B5940F838AE8}.VTune|x64.ActiveCfg = VTune|x64
+ 		{437E43D2-ED2D-406B-88DB-B5940F838AE8}.VTune|x64.Build.0 = VTune|x64
  		{B004A8CC-B3A9-4600-A1A9-EF1BBCF2434B}.Debug_Debugger|Win32.ActiveCfg = Debug_Debugger|Win32
  		{B004A8CC-B3A9-4600-A1A9-EF1BBCF2434B}.Debug_Debugger|Win32.Build.0 = Debug_Debugger|Win32
  		{B004A8CC-B3A9-4600-A1A9-EF1BBCF2434B}.Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Debug_Debugger|Win32
@@ -859,10 +978,15 @@ diff --git a/platform/win32/avmplus2008.sln b/platform/win32/avmplus2008.sln
  		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug_Debugger|Win32.ActiveCfg = Debug|Win32
  		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug_Debugger|Win32.Build.0 = Debug|Win32
  		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I).ActiveCfg = Debug|Windows Mobile 6 Professional SDK (ARMV4I)
-diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcproj
---- a/platform/win32/avmplus2008.vcproj
-+++ b/platform/win32/avmplus2008.vcproj
-@@ -1,7 +1,7 @@
+ 		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I).Build.0 = Debug|Windows Mobile 6 Professional SDK (ARMV4I)
+ 		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug_Debugger|x64.ActiveCfg = Debug|x64
+ 		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug_Debugger|x64.Build.0 = Debug|x64
+ 		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{5A7E8ACA-065A-4456-BBD0-535691718FD0}.Debug|Win32.Build.0 = Debug|Win32
+diff -r 95ff632db74b platform/win32/avmplus2008.vcproj
+--- a/platform/win32/avmplus2008.vcproj	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/avmplus2008.vcproj	Mon Sep 27 08:55:46 2010 +0200
+@@ -1,12 +1,12 @@
  <?xml version="1.0" encoding="Windows-1252"?>
  <VisualStudioProject
  	ProjectType="Visual C++"
@@ -871,7 +995,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  	Name="avmplus"
  	ProjectGUID="{437E43D2-ED2D-406B-88DB-B5940F838AE8}"
  	RootNamespace="avmplus"
-@@ -53,7 +53,7 @@
+ 	Keyword="Win32Proj"
+ 	TargetFrameworkVersion="131072"
+ 	>
+ 	<Platforms>
+ 		<Platform
+@@ -48,17 +48,17 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\VMPI;..\..\MMgc;..\..\core;..\..\shell;..\..\pcre;..\..\eval;.."
+ 				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;WIN32;AVMSHELL_BUILD;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
  				MinimalRebuild="true"
  				ExceptionHandling="0"
  				BasicRuntimeChecks="3"
@@ -880,7 +1014,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  				TreatWChar_tAsBuiltInType="false"
  				RuntimeTypeInfo="false"
  				UsePrecompiledHeader="2"
-@@ -96,6 +96,377 @@
+ 				PrecompiledHeaderThrough="avmplus.h"
+ 				ProgramDataBaseFileName="$(IntDir)/avmplus.pdb"
+ 				BrowseInformation="0"
+ 				WarningLevel="4"
+ 				WarnAsError="true"
+@@ -91,16 +91,387 @@
+ 			<Tool
+ 				Name="VCFxCopTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -1258,7 +1402,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  			Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -181,80 +552,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -176,90 +547,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -1339,7 +1493,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  			Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -341,79 +638,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -336,89 +633,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -1419,7 +1583,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  			Name="Release_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -500,79 +724,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+@@ -495,89 +719,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -1499,7 +1673,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  			Name="Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -657,81 +808,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+@@ -652,91 +803,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -1581,7 +1765,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  			Name="VTune|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -819,82 +895,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -814,92 +890,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -1664,7 +1858,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  			Name="MemoryProfiler|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -1556,22 +1556,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -1551,123 +1551,107 @@
+ 				RelativePath="..\..\core\AvmLog.cpp"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\core\AvmLog.h"
  				>
  			</File>
  			<File
@@ -1687,7 +1891,11 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  				RelativePath=".\avmplus.cpp"
  				>
  				<FileConfiguration
-@@ -1583,6 +1567,46 @@
+ 					Name="Debug|Win32"
+ 					>
+ 					<Tool
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -1734,7 +1942,8 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  					Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1591,14 +1615,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -1749,7 +1958,8 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  					Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1607,14 +1623,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -1764,7 +1974,8 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  					Name="Release_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1623,14 +1631,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -1779,7 +1990,8 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  					Name="Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1639,14 +1639,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -1794,7 +2006,8 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  					Name="VTune|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1655,14 +1647,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -1809,7 +2022,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  					Name="MemoryProfiler|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1916,11 +1900,11 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
+ 					/>
+ 				</FileConfiguration>
+ 				<FileConfiguration
+@@ -1911,41 +1895,41 @@
+ 				RelativePath="..\..\core\ErrorConstants.cpp"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\core\ErrorConstants.h"
  				>
  			</File>
  			<File
@@ -1823,7 +2046,15 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  				>
  			</File>
  			<File
-@@ -1936,11 +1920,11 @@
+ 				RelativePath="..\..\core\exec-inlines.h"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\core\exec-jit.cpp"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\core\exec-verifyall.cpp"
  				>
  			</File>
  			<File
@@ -1837,7 +2068,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  				>
  			</File>
  			<File
-@@ -2008,11 +1992,11 @@
+ 				RelativePath="..\..\core\FrameState-inlines.h"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\core\FrameState.cpp"
+@@ -2003,21 +1987,21 @@
+ 				RelativePath="..\..\core\MathUtils.cpp"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\core\MathUtils.h"
  				>
  			</File>
  			<File
@@ -1851,7 +2092,17 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  				>
  			</File>
  			<File
-@@ -2340,6 +2324,22 @@
+ 				RelativePath="..\..\core\MethodClosure.cpp"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath="..\..\core\MethodClosure.h"
+@@ -2335,16 +2319,32 @@
+ 				RelativePath="..\..\core\VTable.h"
+ 				>
+ 			</File>
+ 			<File
+ 				RelativePath=".\Vtune.cpp"
  				>
  			</File>
  			<File
@@ -1874,10 +2125,15 @@ diff --git a/platform/win32/avmplus2008.vcproj b/platform/win32/avmplus2008.vcpr
  				RelativePath=".\win32setjmp.cpp"
  				>
  				<FileConfiguration
-diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
---- a/platform/win32/eval2008.vcproj
-+++ b/platform/win32/eval2008.vcproj
-@@ -1,7 +1,7 @@
+ 					Name="Debug|Win32"
+ 					>
+ 					<Tool
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="0"
+diff -r 95ff632db74b platform/win32/eval2008.vcproj
+--- a/platform/win32/eval2008.vcproj	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/eval2008.vcproj	Mon Sep 27 08:55:46 2010 +0200
+@@ -1,12 +1,12 @@
  <?xml version="1.0" encoding="Windows-1252"?>
  <VisualStudioProject
  	ProjectType="Visual C++"
@@ -1886,7 +2142,17 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  	Name="eval"
  	ProjectGUID="{AAEFC4E3-287B-4DD5-B668-DE084BC8041A}"
  	RootNamespace="eval"
-@@ -53,7 +53,7 @@
+ 	Keyword="ManagedCProj"
+ 	TargetFrameworkVersion="131072"
+ 	>
+ 	<Platforms>
+ 		<Platform
+@@ -48,17 +48,17 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\VMPI;..\..\MMgc;..\..\core;..\..\shell;..\..\pcre;..\..\nanojit;..\..\eval;.."
+ 				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;WIN32;AVMSHELL_BUILD;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
  				MinimalRebuild="false"
  				ExceptionHandling="0"
  				BasicRuntimeChecks="3"
@@ -1895,7 +2161,17 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  				TreatWChar_tAsBuiltInType="false"
  				RuntimeTypeInfo="true"
  				UsePrecompiledHeader="2"
-@@ -95,6 +95,379 @@
+ 				PrecompiledHeaderThrough="avmplus.h"
+ 				ProgramDataBaseFileName="$(IntDir)/eval.pdb"
+ 				BrowseInformation="1"
+ 				WarningLevel="4"
+ 				WarnAsError="true"
+@@ -90,16 +90,389 @@
+ 			<Tool
+ 				Name="VCFxCopTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -2275,7 +2551,17 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  			Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -179,81 +552,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -174,91 +547,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -2357,7 +2643,17 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  			Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -341,80 +639,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="0"
+ 			>
+@@ -336,90 +634,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -2438,7 +2734,17 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  			Name="VTune|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -502,81 +726,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -497,91 +721,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -2520,7 +2826,17 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  			Name="Release_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -664,79 +813,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="2"
+ 			WholeProgramOptimization="0"
+ 			>
+@@ -659,89 +808,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -2600,7 +2916,17 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  			Name="Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -820,82 +896,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+@@ -815,92 +891,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -2683,10 +3009,15 @@ diff --git a/platform/win32/eval2008.vcproj b/platform/win32/eval2008.vcproj
  			Name="MemoryProfiler|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcproj
---- a/platform/win32/nanojit2008.vcproj
-+++ b/platform/win32/nanojit2008.vcproj
-@@ -1,7 +1,7 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="0"
+ 			>
+diff -r 95ff632db74b platform/win32/nanojit2008.vcproj
+--- a/platform/win32/nanojit2008.vcproj	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/nanojit2008.vcproj	Mon Sep 27 08:55:46 2010 +0200
+@@ -1,12 +1,12 @@
  <?xml version="1.0" encoding="Windows-1252"?>
  <VisualStudioProject
  	ProjectType="Visual C++"
@@ -2695,7 +3026,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  	Name="nanojit"
  	ProjectGUID="{7E408248-3BAA-45AE-B65A-5355113A1FF8}"
  	RootNamespace="nanojit"
-@@ -53,7 +53,7 @@
+ 	Keyword="ManagedCProj"
+ 	TargetFrameworkVersion="131072"
+ 	>
+ 	<Platforms>
+ 		<Platform
+@@ -48,17 +48,17 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\VMPI;..\..\MMgc;..\..\core;..\..\shell;..\..\pcre;..\..\eval;..\..\nanojit;.."
+ 				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;WIN32;AVMSHELL_BUILD;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
  				MinimalRebuild="false"
  				ExceptionHandling="0"
  				BasicRuntimeChecks="3"
@@ -2704,7 +3045,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  				TreatWChar_tAsBuiltInType="false"
  				RuntimeTypeInfo="true"
  				UsePrecompiledHeader="2"
-@@ -95,6 +95,378 @@
+ 				PrecompiledHeaderThrough="nanojit.h"
+ 				ProgramDataBaseFileName="$(IntDir)/nanojit.pdb"
+ 				BrowseInformation="1"
+ 				WarningLevel="4"
+ 				WarnAsError="true"
+@@ -90,16 +90,388 @@
+ 			<Tool
+ 				Name="VCFxCopTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -3083,7 +3434,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  			Name="Debug|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -179,81 +551,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -174,91 +546,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -3165,7 +3526,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  			Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -341,80 +638,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="0"
+ 			>
+@@ -336,90 +633,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -3246,7 +3617,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  			Name="VTune|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -502,81 +725,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -497,91 +720,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -3328,7 +3709,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  			Name="Release_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -664,78 +812,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="2"
+ 			WholeProgramOptimization="0"
+ 			>
+@@ -659,88 +807,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -3407,7 +3798,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  			Name="Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -819,82 +895,6 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+@@ -814,92 +890,16 @@
+ 				RemoteDirectory=""
+ 				RegisterOutput="0"
+ 				AdditionalFiles=""
+ 			/>
+ 			<DebuggerTool
  			/>
  		</Configuration>
  		<Configuration
@@ -3490,7 +3891,17 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  			Name="MemoryProfiler|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -1474,7 +1474,7 @@
+ 			ConfigurationType="4"
+ 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="0"
+ 			>
+@@ -1469,96 +1469,96 @@
+ 					Name="Debug|Win32"
+ 					>
+ 					<Tool
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -3499,7 +3910,7 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  					>
  					<Tool
  						Name="VCCLCompilerTool"
-@@ -1482,7 +1482,39 @@
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -3540,7 +3951,15 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  					>
  					<Tool
  						Name="VCCLCompilerTool"
-@@ -1498,14 +1530,6 @@
+ 						UsePrecompiledHeader="1"
+ 					/>
+ 				</FileConfiguration>
+ 				<FileConfiguration
+ 					Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
+ 					>
+ 					<Tool
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -3555,7 +3974,8 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  					Name="VTune|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1514,14 +1538,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -3570,7 +3990,8 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  					Name="Release_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1530,14 +1546,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -3585,7 +4006,8 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  					Name="Debug_Debugger|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-@@ -1546,14 +1554,6 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
  					/>
  				</FileConfiguration>
  				<FileConfiguration
@@ -3600,10 +4022,15 @@ diff --git a/platform/win32/nanojit2008.vcproj b/platform/win32/nanojit2008.vcpr
  					Name="MemoryProfiler|Windows Mobile 6 Professional SDK (ARMV4I)"
  					>
  					<Tool
-diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
---- a/platform/win32/shell2008.vcproj
-+++ b/platform/win32/shell2008.vcproj
-@@ -1,7 +1,7 @@
+ 						Name="VCCLCompilerTool"
+ 						UsePrecompiledHeader="1"
+ 					/>
+ 				</FileConfiguration>
+ 				<FileConfiguration
+diff -r 95ff632db74b platform/win32/shell2008.vcproj
+--- a/platform/win32/shell2008.vcproj	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/shell2008.vcproj	Mon Sep 27 08:55:46 2010 +0200
+@@ -1,12 +1,12 @@
  <?xml version="1.0" encoding="Windows-1252"?>
  <VisualStudioProject
  	ProjectType="Visual C++"
@@ -3612,7 +4039,17 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  	Name="shell"
  	ProjectGUID="{437E43D2-ED2D-406B-88DB-B5940F838AE9}"
  	RootNamespace="shell"
-@@ -52,7 +52,7 @@
+ 	Keyword="Win32Proj"
+ 	TargetFrameworkVersion="131072"
+ 	>
+ 	<Platforms>
+ 		<Platform
+@@ -47,17 +47,17 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\VMPI;..\..\shell;..\..\extensions;..\..\MMgc;..\..\other-licenses\zlib;..\..\core;..\..\eval;.;.."
+ 				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;AVMSHELL_BUILD;WIN32;_DEBUG;_CONSOLE;USE_REAL2INT;_CRT_SECURE_NO_DEPRECATE"
  				MinimalRebuild="false"
  				ExceptionHandling="0"
  				BasicRuntimeChecks="3"
@@ -3621,7 +4058,17 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  				ForceConformanceInForLoopScope="false"
  				RuntimeTypeInfo="false"
  				UsePrecompiledHeader="0"
-@@ -106,6 +106,435 @@
+ 				PrecompiledHeaderThrough=""
+ 				BrowseInformation="1"
+ 				WarningLevel="4"
+ 				WarnAsError="true"
+ 				Detect64BitPortabilityProblems="false"
+@@ -101,16 +101,445 @@
+ 			<Tool
+ 				Name="VCAppVerifierTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4057,7 +4504,17 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  			Name="Debug|x64"
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-@@ -194,92 +623,6 @@
+ 			ConfigurationType="1"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -189,102 +618,16 @@
+ 			<Tool
+ 				Name="VCAppVerifierTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4150,7 +4607,17 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  			Name="Release|x64"
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-@@ -369,91 +712,6 @@
+ 			ConfigurationType="1"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -364,101 +707,16 @@
+ 			<Tool
+ 				Name="VCAppVerifierTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4242,7 +4709,17 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  			Name="Release_Debugger|x64"
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-@@ -541,90 +799,6 @@
+ 			ConfigurationType="1"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -536,100 +794,16 @@
+ 			<Tool
+ 				Name="VCAppVerifierTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4333,7 +4810,17 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  			Name="Debug_Debugger|x64"
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-@@ -712,93 +886,6 @@
+ 			ConfigurationType="1"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -707,103 +881,16 @@
+ 			<Tool
+ 				Name="VCAppVerifierTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4427,7 +4914,17 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  			Name="VTune|x64"
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-@@ -888,93 +975,6 @@
+ 			ConfigurationType="1"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -883,103 +970,16 @@
+ 			<Tool
+ 				Name="VCAppVerifierTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4521,29 +5018,48 @@ diff --git a/platform/win32/shell2008.vcproj b/platform/win32/shell2008.vcproj
  			Name="MemoryProfiler|x64"
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
-diff --git a/platform/win32/win32setjmp.cpp b/platform/win32/win32setjmp.cpp
---- a/platform/win32/win32setjmp.cpp
-+++ b/platform/win32/win32setjmp.cpp
-@@ -72,6 +72,7 @@
+ 			ConfigurationType="1"
+ 			CharacterSet="2"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+diff -r 95ff632db74b platform/win32/win32setjmp.cpp
+--- a/platform/win32/win32setjmp.cpp	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/win32setjmp.cpp	Mon Sep 27 08:55:46 2010 +0200
+@@ -67,27 +67,29 @@ extern "C"
+ 
+     // Disable the "ebp was modified" warning.
+     // We really do want to modify it.
+     #pragma warning ( disable : 4731 )
+ 
      // flow in or out of inline asm code suppresses global optimization
      #pragma warning ( disable : 4740 )
  
-+	/*
++#ifndef WIN32
      __declspec(noreturn)
      void __cdecl longjmp(jmp_buf jmpbuf, int result)
      {
-@@ -88,6 +89,7 @@
+         _asm
+         {
+             mov edx,[jmpbuf]
+             mov eax,[result]
+             mov ebp,DWORD PTR [edx]
+             mov ebx,DWORD PTR [edx+4]
+             mov edi,DWORD PTR [edx+8]
+             mov esi,DWORD PTR [edx+12]
+             mov esp,DWORD PTR [edx+16]
+             add esp,4
              jmp DWORD PTR [edx+20]
          }
      }
-+	*/
++#endif
  
      #pragma warning ( default : 4740 )
  }
-diff --git a/platform/win32/zlib2008.vcproj b/platform/win32/zlib2008.vcproj
---- a/platform/win32/zlib2008.vcproj
-+++ b/platform/win32/zlib2008.vcproj
-@@ -1,7 +1,7 @@
+diff -r 95ff632db74b platform/win32/zlib2008.vcproj
+--- a/platform/win32/zlib2008.vcproj	Fri Aug 20 09:52:21 2010 -0700
++++ b/platform/win32/zlib2008.vcproj	Mon Sep 27 08:55:46 2010 +0200
+@@ -1,12 +1,12 @@
  <?xml version="1.0" encoding="Windows-1252"?>
  <VisualStudioProject
  	ProjectType="Visual C++"
@@ -4552,7 +5068,17 @@ diff --git a/platform/win32/zlib2008.vcproj b/platform/win32/zlib2008.vcproj
  	Name="zlib"
  	ProjectGUID="{5A7E8ACA-065A-4456-BBD0-535691718FD0}"
  	RootNamespace="zlib"
-@@ -51,7 +51,138 @@
+ 	Keyword="Win32Proj"
+ 	TargetFrameworkVersion="131072"
+ 	>
+ 	<Platforms>
+ 		<Platform
+@@ -46,17 +46,148 @@
+ 			/>
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				PreprocessorDefinitions="WIN32;AVMSHELL_BUILD;_DEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE"
  				MinimalRebuild="false"
  				ExceptionHandling="0"
  				BasicRuntimeChecks="3"
@@ -4692,7 +5218,17 @@ diff --git a/platform/win32/zlib2008.vcproj b/platform/win32/zlib2008.vcproj
  				ForceConformanceInForLoopScope="false"
  				RuntimeTypeInfo="false"
  				UsePrecompiledHeader="0"
-@@ -238,71 +369,6 @@
+ 				WarningLevel="3"
+ 				WarnAsError="true"
+ 				Detect64BitPortabilityProblems="false"
+ 				DebugInformationFormat="3"
+ 			/>
+@@ -233,81 +364,16 @@
+ 			<Tool
+ 				Name="VCFxCopTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4764,7 +5300,17 @@ diff --git a/platform/win32/zlib2008.vcproj b/platform/win32/zlib2008.vcproj
  			Name="Release|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
-@@ -448,72 +514,6 @@
+ 			ConfigurationType="4"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"
+@@ -443,82 +509,16 @@
+ 			<Tool
+ 				Name="VCFxCopTool"
+ 			/>
+ 			<Tool
+ 				Name="VCPostBuildEventTool"
  			/>
  		</Configuration>
  		<Configuration
@@ -4837,3 +5383,8 @@ diff --git a/platform/win32/zlib2008.vcproj b/platform/win32/zlib2008.vcproj
  			Name="MemoryProfiler|Windows Mobile 6 Professional SDK (ARMV4I)"
  			OutputDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
  			IntermediateDirectory="Windows Mobile 6 Professional SDK (ARMV4I)\$(ConfigurationName)"
+ 			ConfigurationType="4"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+ 				Name="VCPreBuildEventTool"

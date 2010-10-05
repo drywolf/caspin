@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import os;
-import sys;
+import os
 
 # the CASPIN_HOME environment variable
 caspin_home = os.getenv("CASPIN_HOME")
@@ -12,17 +11,14 @@ classes = [
 ]
 
 # base command for compiling the native class package
-cmd = "python " + caspin_home + "/tools/cspcompile.py myclasses ";
+cmd = "python " + caspin_home + "/tools/cspcompile.py myclasses "
 
 # add the classes to the build command
 for str in classes:
-	cmd += str + " ";
+	cmd += str + " "
 
 # compile the native package
-os.system(cmd);
+os.system(cmd)
 
 # generate the glue code for the native package
-os.system("python " + caspin_home + "/tools/cspgenerate.py myclasses");
-
-# compile our sample playpen.as
-os.system("python " + caspin_home + "/tools/cspcompile.py playpen playpen.as myclasses.abc");
+os.system("python " + caspin_home + "/tools/cspgenerate.py myclasses")

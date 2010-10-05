@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
-import os;
-import sys;
-import colors;
-import shutil;
+import sys
+sys.path.append("tools")
+
+import os
+import colors
+import shutil
 
 if os.name != "posix":
 	colors.println("r", "ERROR: only usable on unix systems")
-	sys.exit(0)
+	exit()
 
 # the initial working directory
 cwd = os.getcwd()

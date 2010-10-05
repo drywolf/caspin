@@ -35,63 +35,57 @@ the terms of any one of the MPL, the GPL or the LGPL.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __cspNativePackage_H__
-#define __cspNativePackage_H__
+#ifndef __cspScriptDefinition_H__
+#define __cspScriptDefinition_H__
 
 #include "cspPrerequisites.h"
-#include "cspVmCore.h"
 
 namespace csp
 {
-	/** An abstract helper class for adding ActionScript 3 class packages to a VmCore */
-	class NativePackageBase
+	//-----------------------------------------------------------------------
+	class ScriptDefinition
 	{
 	public:
-		NativePackageBase(VmCore* core, uint num_classes) : mID(-1), mCore(core), mNumClasses(num_classes) { }
-		virtual ~NativePackageBase() {}
-
-		/** Get the PoolObject that contains the ActionScript 3 definitions */
-		avmplus::PoolObject* getPool()
+		ScriptDefinition() 
+			: as3_env(NULL), 
+			method_env(NULL)
 		{
-			return mPool;
+
 		}
 
-		/** Abstract method to get the package name */
-		const int& getID() const
+		ScriptDefinition(VmCore* core, const String& identifier, const String& package = "") 
+			: as3_env(NULL), 
+			method_env(NULL)
 		{
-			return mID;
+			avmplus::Namespacep ns = core->getToplevel()->getDefaultNamespace();
+
+			if(package.length())
+			{
+				ns = core->internNamespace(core->newNamespace(core->stringToAS3(package)));
+			}
+
+			multi_name = avmplus::Multiname(ns, core->stringToAS3(identifier));
 		}
 
-		const uint& getNumClasses() const
+		ScriptDefinition(VmCore* core, avmplus::Stringp identifier, avmplus::Stringp package = NULL) 
+			: as3_env(NULL), 
+			method_env(NULL)
 		{
-			return mNumClasses;
+			avmplus::Namespacep ns = core->getToplevel()->getDefaultNamespace();
+
+			if(package && package->length())
+			{
+				ns = core->internNamespace(core->newNamespace(package));
+			}
+
+			multi_name = avmplus::Multiname(ns, identifier);
 		}
 
-	protected:
-		int mID;
-		uint mNumClasses;
-		VmCore* mCore;
-		avmplus::PoolObject* mPool;
-
-		/** The abstract method that needs to do the binding work */
-		virtual void initPool() = 0;
+		avmplus::Multiname multi_name;
+		avmplus::ScriptEnv* as3_env;
+		avmplus::MethodEnv* method_env;
 	};
-
-	/** The macro that automatically implements the abstract NativePackageBase class */
-#define NativePackage(core, package) \
-	class core##_Impl_##package : public csp::NativePackageBase \
-	{ \
-	public: \
-		core##_Impl_##package(csp::VmCore* core) \
-			: csp::NativePackageBase(core, avmplus::NativeID::package##_abc_class_count) { initPool(); } \
-	protected: \
-		void initPool() \
-		{ \
-			MMGC_GCENTER(mCore->GetGC()); \
-			mPool = avmplus::NativeID::initBuiltinABC_##package(mCore, mCore->builtinDomain); \
-			mID = mCore->addPackage(this); \
-		} \
-	} core##_##package(core);
+	//-----------------------------------------------------------------------
 }
 
 #endif

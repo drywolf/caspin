@@ -33,7 +33,7 @@ set (include_dirs
 )
 
 # load the source-groups & file list
-include (source_files)
+include (caspin_src_files)
 
 # on unix we need to build "eval" ourselves
 if(UNIX)
@@ -57,6 +57,20 @@ add_library (caspin STATIC ${file_root})
 # add the caspin debugger library (tamarin runtime debugger enabled)
 add_library (caspin_debugger STATIC ${file_root})
 
+# automatically update the source-file list with folders4cmake
+auto_rebuild_src_files (caspin ${tamarin_path} \${tamarin_path})
+
+# the path that contains the caspin_base package AS3 files
+set (as3_dir ${CMAKE_SOURCE_DIR}/as3)
+
+# automatically compile the caspin_base AS3 files to ABC if necessary
+add_custom_command (
+	OUTPUT ${CMAKE_SOURCE_DIR}/include/caspin_base.h ${CMAKE_SOURCE_DIR}/src/caspin_base.cpp
+	MAIN_DEPENDENCY ${as3_dir}/caspin_base.as
+	WORKING_DIRECTORY ${as3_dir}
+	COMMAND ${as3_dir}/build.py
+)
+
 # enable the tamarin debugger for the caspin debugger library build
 set_property (TARGET caspin_debugger PROPERTY COMPILE_DEFINITIONS ${COMPILE_DEFINITIONS} DEBUGGER CSP_USE_RUNTIME_DEBUGGER)
 
@@ -66,6 +80,6 @@ target_link_libraries (caspin_debugger ${tamarin_debugger_libs})
 
 # write the cmake import file
 set (caspin_import_file ${CMAKE_SOURCE_DIR}/cmake/caspin_import_${CMAKE_GENERATOR}.cmake)
-export(TARGETS caspin caspin_debugger FILE ${caspin_import_file})
+export (TARGETS caspin caspin_debugger FILE ${caspin_import_file})
 file (APPEND ${caspin_import_file} "\n# caspin include directories\n")
 file (APPEND ${caspin_import_file} "set (caspin_include_dirs ${include_dirs})\n")

@@ -7,6 +7,10 @@ set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # remove the MinSizeRel and RelWithDebInfo configurations
 set (CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "limited configs" FORCE)
 
+# load the folders4cmake utils
+set (folders4cmake_path ${CMAKE_SOURCE_DIR}/cmake/folders4cmake.jar)
+include (folders4cmake)
+
 # dependency discovery
 find_package (tamarin REQUIRED)
 

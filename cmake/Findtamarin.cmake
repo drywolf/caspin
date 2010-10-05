@@ -9,21 +9,21 @@
 set (tamarin__path "<default>" CACHE STRING "You can use this option to specify an alternate path to the tamarin dependency")
 
 if(tamarin__path STREQUAL "<default>")
-
+#{
 	# use default path to the dependency
 	set (tamarin_path ${CMAKE_SOURCE_DIR}/tamarin CACHE INTERNAL "")
-
+#}
 else()
-
+#{
 	# use the path that was specified by the user
 	set (tamarin_path ${tamarin__path} CACHE INTERNAL "")
-
+#}
 endif()
 
 if(WIN32)
-
+#{
 	if(MSVC90)
-	
+#	{
 		set (tamarin_output_dir ${tamarin_path}/platform/win32/obj_9)
 		
 		# tamarin debug libraries
@@ -77,9 +77,11 @@ if(WIN32)
 			optimized ${tamarin_mmgc_debugger_lib}
 			optimized ${tamarin_nanojit_debugger_lib}
 		)
+#	}
 	endif(MSVC90)
 	
 	if(MSVC10)
+#	{
 		set (tamarin_output_dir ${tamarin_path}/platform/win32/obj2010)
 		
 		# tamarin debug libraries
@@ -109,6 +111,7 @@ if(WIN32)
 			# release
 			optimized ${tamarin_avm_debugger_lib}
 		)
+#	}
 	endif(MSVC10)
 	
 	# additional win32 libraries
@@ -121,11 +124,11 @@ if(WIN32)
 		${tamarin_debugger_libs}
 		winmm.lib
 	)
-	
+#}
 endif(WIN32)
 
 if(UNIX)
-
+#{
 	# tamarin default libraries
 	find_library(tamarin_avmplus_lib	NAMES avmplus	PATHS ${tamarin_path}/bin)
 	find_library(tamarin_mmgc_lib		NAMES MMgc		PATHS ${tamarin_path}/bin)
@@ -145,6 +148,7 @@ if(UNIX)
 		${tamarin_mmgc_debugger_lib}
 		pthread
 	)
+#}
 endif()
 
 # try to find the tamarin headers
@@ -153,6 +157,7 @@ find_path(tamarin_include_base NAMES core/avmplus.h PATHS ${tamarin_path})
 # the tamarin include directories
 set (tamarin_include_dirs
 	${tamarin_include_base}/core
+	${tamarin_include_base}/vmbase
 	${tamarin_include_base}/VMPI
 	${tamarin_include_base}/platform
 	${tamarin_include_base}/MMgc
@@ -169,11 +174,15 @@ endif(tamarin_include_base AND tamarin_libs AND tamarin_debugger_libs)
 
 # report find result
 if(tamarin_found)
+#{
 	if(NOT tamarin_FIND_QUIETLY)
 		message(STATUS "Found tamarin: ${tamarin_path}")
 	endif(NOT tamarin_FIND_QUIETLY)
+#}
 else(tamarin_found)
+#{
 	if(tamarin_FIND_REQUIRED)
 		message(FATAL_ERROR "Could not find tamarin")
 	endif(tamarin_FIND_REQUIRED)
+#}
 endif(tamarin_found)

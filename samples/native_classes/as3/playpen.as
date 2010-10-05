@@ -1,9 +1,23 @@
 package
 {
 	import avmplus.MyClass;
-	
+
+	// call the static functions
+	trace(MyClass.static_as3_function(2, 3));
+	trace(MyClass.static_native_function());
+
+	// create an instance of the class
 	var obj:MyClass = new MyClass();
-	trace(obj.stringTest("12345"));
-	
-	trace(MyClass.getTestString());
+
+	// call the class methods
+	obj.as3_function();
+	trace(obj.native_function("123456789"));
+}
+
+package test
+{
+	public function hihi()
+	{
+		trace("hihi");
+	}
 }

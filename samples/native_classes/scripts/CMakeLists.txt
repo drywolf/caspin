@@ -39,7 +39,7 @@ set (include_dirs
 )
 
 # read the source files list
-include (source_files)
+include (native_classes_src_files)
 
 #-----------------------------------------------------------------------
 # BUILD SETTINGS & COMPILATION
@@ -68,6 +68,32 @@ endif()
 
 # add the sample
 add_executable (native_classes ${file_root})
+
+# automatically update the source files list
+#auto_rebuild_src_files (native_classes)
+
+# the sample path
+set (sample_dir ${CMAKE_SOURCE_DIR}/samples/native_classes)
+
+# the path that contains the AS3 files for this sample
+set (as3_dir ${sample_dir}/as3)
+
+# automatically compile the native classes to ABC and generate the C++ glue code
+add_custom_command (
+	OUTPUT ${as3_dir}/myclasses.abc ${sample_dir}/include/myclasses.h ${sample_dir}/src/myclasses.cpp
+	MAIN_DEPENDENCY ${as3_dir}/myclasses.as
+	WORKING_DIRECTORY ${as3_dir}
+	COMMAND ${as3_dir}/build_myclasses.py
+)
+
+# automatically compile the sample AS3 files to ABC if necessary
+add_custom_command (
+	OUTPUT ${as3_dir}/playpen.abc
+	MAIN_DEPENDENCY ${as3_dir}/playpen.as
+	DEPENDS ${as3_dir}/myclasses.abc
+	WORKING_DIRECTORY ${as3_dir}
+	COMMAND ${as3_dir}/build_playpen.py
+)
 
 # enable the tamarin debugger
 if(sample_NATIVE_CLASSES_use_runtime_debugger)

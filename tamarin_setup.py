@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
-import os;
-import sys;
-import colors;
-import shutil;
-import urllib2;
+import sys
+sys.path.append("tools")
+
+import os
+import colors
+import shutil
+import urllib2
 
 # the tamarin mercurial repository url
 tamarin_repository = "http://hg.mozilla.org/tamarin-redux"

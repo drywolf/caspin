@@ -3,43 +3,10 @@
 #include <string>
 #include <sstream>
 
-using namespace avmplus;
 #include "myclasses.cpp"
 
 namespace avmplus
 {
-	//-----------------------------------------------------------------------
-	MyClass::MyClass(avmplus::VTable* cvtable) 
-		: ClassClosure(cvtable)
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	MyClass::~MyClass()
-	{
-
-	}
-	//-----------------------------------------------------------------------
-	avmplus::ScriptObject* MyClass::createInstance(avmplus::VTable* ivtable, avmplus::ScriptObject* prototype)
-	{
-		return new (core()->GetGC(), ivtable->getExtraSize()) MyClassInstance(ivtable, prototype);
-	}
-	//-----------------------------------------------------------------------
-	avmplus::Stringp MyClass::getTestString()
-	{
-		std::string filename = __FILE__;
-		size_t pos = filename.find_last_of('\\');
-		if(pos != std::string::npos)
-		{
-			++pos;
-			filename = filename.substr(pos, filename.length()-pos);
-		}
-
-		std::stringstream str;
-		str << filename << " compiled at " << __TIME__; 
-		avmplus::Stringp text = core()->newStringUTF8(str.str().c_str());
-		return text;
-	}
 	//-----------------------------------------------------------------------
 	MyClassInstance::MyClassInstance(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 		: ScriptObject(vtable, prototype)
@@ -52,7 +19,7 @@ namespace avmplus
 
 	}
 	//-----------------------------------------------------------------------
-	int MyClassInstance::stringTest(avmplus::Stringp str)
+	int MyClassInstance::native_function(avmplus::Stringp str)
 	{
 		std::stringstream sstr;
 
@@ -65,6 +32,38 @@ namespace avmplus
 		int temp;
 		sstr >> temp;
 		return temp;
+	}
+	//-----------------------------------------------------------------------
+	MyClass::MyClass(avmplus::VTable* cvtable) 
+		: ClassClosure(cvtable)
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	MyClass::~MyClass()
+	{
+
+	}
+	//-----------------------------------------------------------------------
+	avmplus::Stringp MyClass::static_native_function()
+	{
+		std::string filename = __FILE__;
+		size_t pos = filename.find_last_of('\\');
+
+		if(pos == std::string::npos)
+			pos = filename.find_last_of('/');
+
+		if(pos == std::string::npos)
+			pos = 0;
+		else
+			++pos;
+
+		filename = filename.substr(pos, filename.length()-pos);
+
+		std::stringstream str;
+		str << filename << " compiled at " << __TIME__; 
+		avmplus::Stringp text = core()->newStringUTF8(str.str().c_str());
+		return text;
 	}
 	//-----------------------------------------------------------------------
 }
