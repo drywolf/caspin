@@ -1,12 +1,8 @@
 #include "MyClass.h"
 
-#include <string>
-#include <sstream>
-
 #include "myclasses.cpp"
 
-namespace avmplus
-{
+namespace my { namespace pkg {
 	//-----------------------------------------------------------------------
 	MyClassInstance::MyClassInstance(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) 
 		: ScriptObject(vtable, prototype)
@@ -34,18 +30,18 @@ namespace avmplus
 		return temp;
 	}
 	//-----------------------------------------------------------------------
-	MyClass::MyClass(avmplus::VTable* cvtable) 
+	MyClassClass::MyClassClass(avmplus::VTable* cvtable) 
 		: ClassClosure(cvtable)
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	MyClass::~MyClass()
+	MyClassClass::~MyClassClass()
 	{
 
 	}
 	//-----------------------------------------------------------------------
-	avmplus::Stringp MyClass::static_native_function()
+	avmplus::Stringp MyClassClass::static_native_function()
 	{
 		std::string filename = __FILE__;
 		size_t pos = filename.find_last_of('\\');
@@ -66,4 +62,4 @@ namespace avmplus
 		return text;
 	}
 	//-----------------------------------------------------------------------
-}
+}}

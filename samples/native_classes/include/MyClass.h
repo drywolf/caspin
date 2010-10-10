@@ -4,8 +4,7 @@
 
 #include "myclasses.h"
 
-namespace avmplus
-{
+namespace my { namespace pkg {
 	//-----------------------------------------------------------------------
 	class MyClassInstance : public avmplus::ScriptObject
 	{
@@ -18,16 +17,16 @@ namespace avmplus
 		CSP_INST_SLOTS(MyClassInstance);
 	};
 	//-----------------------------------------------------------------------
-	class MyClass : public avmplus::ClassClosure
+	class MyClassClass : public avmplus::ClassClosure
 	{
 	public:
-		MyClass(avmplus::VTable* cvtable);
-		~MyClass();
+		MyClassClass(avmplus::VTable* cvtable);
+		~MyClassClass();
 
 		avmplus::Stringp static_native_function();
 
-		CSP_CLASS_CREATE_INSTANCE(MyClass, MyClassInstance);
-		CSP_CLASS_SLOTS(MyClass);
+		CSP_CLASS_CREATE_INSTANCE(MyClassClass, MyClassInstance);
+		CSP_CLASS_SLOTS(MyClassClass);
 	};
 	//-----------------------------------------------------------------------
-}
+}}

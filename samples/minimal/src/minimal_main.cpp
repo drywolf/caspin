@@ -14,7 +14,7 @@
 class coutLog : public csp::OutputListener
 {
 public:
-	void output(const std::string& message)
+	void output(const csp::String& message)
 	{
 		std::cout << message << std::endl;
 	}
@@ -44,21 +44,25 @@ int main(int argc, char* argv[])
 	// execute the compiled ActionScript sample file
 	bool ok = core->executeFile(SAMPLE_PATH + "/as3/minimal.abc");
 
-	csp::ArgumentList args;
+	avmplus::Atom* args = new avmplus::Atom[argc];
 
 	// convert the C++ program arguments to an AS3 equivalent
 	// i=1 --> ignore program path argument
 	for(int i=1; i<argc; ++i)
 	{
-		avmplus::Atom arg_atom = core->scriptString(argv[i]);
-		args.push_back(arg_atom);
+		avmplus::Atom arg_atom = core->toScript(argv[i]);
+		args[i] = arg_atom;
 	}
 
+	avmplus::ClassClosure* main = core->getClassClosure("main", "");
+	avmplus::Atom return_value = core->callGlobalFunction(main);
 	// call the main function of the .abc file
-	avmplus::Atom return_value = core->callGlobalFunction("main", "", args);
+	//avmplus::Atom return_value = core->callGlobalFunction("main", "Min");
+
+	delete[] args;
 
 	// print the integer value that was returned from the AS3 main function
-	std::cout << "AS3-main() return value: " << core->integer(return_value) << std::endl;
+	//std::cout << "AS3-main() return value: " << core->integer(return_value) << std::endl;
 
 	// destroy the virtual machine instance
 	CSP_DESTROY_VMCORE(core);

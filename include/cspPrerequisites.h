@@ -63,6 +63,35 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 #define CASPIN_VERSION ((CASPIN_VERSION_MAJOR << 16) | (CASPIN_VERSION_MINOR << 8) | CASPIN_VERSION_PATCH)
 
+///-----------------------------------------------------------------------
+/// Macros for use at the csp::VmCore
+///-----------------------------------------------------------------------
+
+#define CSP_ENTER_GC() MMgc::GCAutoEnter __csp_auto_enter__(GetGC())
+
+#define CSP_TEMPLATE_ARG_ARRAY_IMPL_1(return_type, method, type0) \
+	template <class T, uint N> \
+	return_type method(type0 arg0, T (&args)[N]) \
+	{ return method(arg0, N-1, args); }
+
+#define CSP_TEMPLATE_ARG_ARRAY_IMPL_2(return_type, method, type0, type1) \
+	template <class T, uint N> \
+	return_type method(type0 arg0, type1 arg1, T (&args)[N]) \
+	{ return method(arg0, arg1, N-1, args); }
+
+#define CSP_TEMPLATE_ARG_ARRAY_IMPL_3(return_type, method, type0, type1, type2) \
+	template <class T, uint N> \
+	return_type method(type0 arg0, type1 arg1, type2 arg2, T (&args)[N]) \
+	{ return method(arg0, arg1, arg2, N-1, args); }
+
+#define CSP_CONVERT_TO_ATOM_IMPL(type) \
+	inline avmplus::Atom toScript(type value) \
+	{ return toScriptPtr(value)->atom(); }
+
+///-----------------------------------------------------------------------
+/// Macros for easier use of caspin / tamarin
+///-----------------------------------------------------------------------
+
 #define CSP_CREATE_VMCORE(name) \
 	{ \
 	MMgc::GC* name_gc = mmfx_new(MMgc::GC(MMgc::GCHeap::GetGCHeap(), MMgc::GC::kIncrementalGC)); \
@@ -128,14 +157,12 @@ namespace csp
 	class NativePackageBase;
 	class OutputListener;
 	class OutputLogger;
-	class ScriptDefinition;
 	class VmCore;
 
 	typedef unsigned int uint;
 	typedef std::string String;
 	typedef std::wstring WString;
 	typedef std::vector<String> StringList;
-	typedef std::vector<avmplus::Atom> ArgumentList;
 }
 
 #endif

@@ -2,7 +2,6 @@
 
 #include "cspNativePackage.h"
 #include "cspOutputListener.h"
-#include "cspScriptDefinition.h"
 #include "cspSystem.h"
 #include "cspVmCore.h"
 
@@ -43,48 +42,49 @@ int main(int argc, char* argv[])
 
 	core->initializePackages();
 
-	//csp::ScriptDefinition def = core->getDefinition("MyClass", "avmplus");
-	//if(def.as3_env)
+	//avmplus::ClassClosure* clazz = core->getClassClosure("MyClass", "avmplus");
+	//if(clazz)
 	//{
-	//	avmplus::MyClassInstance* myclass = (avmplus::MyClassInstance*)core->createObject(def);
-	//	core->stickyObject(myclass);
-	//	csp::VmCore::callObjectFunction(myclass, "as3_function");
-	//	core->unstickyObject(myclass);
+	//	avmplus::MyClassInstance* myclass = (avmplus::MyClassInstance*)core->createObject(clazz);
+	//	core->stickyObject(myclass->atom());
+	//	csp::VmCore::callFunction(myclass, "as3_function");
+	//	core->unstickyObject(myclass->atom());
 	//}
 
-	core->callGlobalFunction("hihi", "test");
+	//core->callGlobalFunction("hihi", "test");
 
 	//csp::ArgumentList args;
 	//args.push_back(core->scriptInteger(3));
 	//args.push_back(core->scriptInteger(-234));
 	//core->console << core->integer(core->callStaticFunction("MyClass", "static_as3_function", "avmplus", args)) << "\n";
 
-	avmplus::ScriptObject* obj = core->createObject(abcclass_Array);
-	int myclasses_id = core_myclasses.getID();
- 	avmplus::MyClassInstance* myclass = (avmplus::MyClassInstance*)core->createObject(abcclass_avmplus_MyClass, myclasses_id);
- 	//csp::VmCore::callObjectFunction(myclass, "as3_function");
-	csp::ScriptDefinition as3_function = csp::VmCore::getMethodDefinition(myclass, "as3_function");
-	csp::ScriptDefinition native_function = csp::VmCore::getMethodDefinition(myclass, "native_function");
+	//avmplus::ScriptObject* obj = core->createBuiltinObject(abcclass_Array);
+	//int myclasses_id = core_myclasses.getID();
+ //	avmplus::MyClassInstance* myclass = (avmplus::MyClassInstance*)core->createNativeObject(abcclass_avmplus_MyClass, myclasses_id);
+ //	//csp::VmCore::callFunction(myclass, "as3_function");
+	//avmplus::MethodEnv* as3_function = csp::VmCore::getMethodEnv(myclass, "as3_function");
+	//avmplus::MethodEnv* native_function = csp::VmCore::getMethodEnv(myclass, "native_function");
 
-	long time = timeGetTime();
+	//long time = timeGetTime();
 
-	csp::uint c = -1;
-	c = c / 2048;
-	avmplus::Atom arg[1] = { myclass->atom() };
-	for(csp::uint i=0; i<c; ++i)
-		csp::VmCore::callObjectFunction(myclass, "as3_function");
+	//csp::uint c = -1;
+	//c = c / 4096;
+	//avmplus::Atom arg[1] = { myclass->atom() };
+	////for(csp::uint i=0; i<c; ++i)
+	//	//csp::VmCore::callFunction(myclass, "as3_function", arg);
+	//	//csp::VmCore::callFunction(myclass, as3_function, arg);
 
-	std::cout << timeGetTime() - time << std::endl;
+	//std::cout << timeGetTime() - time << std::endl;
 
-	avmplus::Atom args[2] = { myclass->atom(), core->scriptString("54321") };
-	avmplus::Atom result = csp::VmCore::callObjectFunction2(myclass, native_function, args, 1);
+	//avmplus::Atom args[2] = { myclass->atom(), core->toScript("54321") };
+	//avmplus::Atom result = csp::VmCore::callFunction(myclass, "native_function", args);
 
-	core->console << core->integer(result) << "\n";
+	//core->console << core->integer(result) << "\n";
 	bool ok = core->executeFile(SAMPLE_PATH + "/as3/playpen.abc");
 
 	CSP_DESTROY_VMCORE(core);
 
-	//if(ok)
+	if(ok)
 	{
 		csp::VmCore::destroyGcHeap();
 	}

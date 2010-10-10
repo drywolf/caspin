@@ -14,7 +14,6 @@ set (file_root_caspin
 	../include/cspNativePackage.h
 	../include/cspOutputListener.h
 	../include/cspOutputLogger.h
-	../include/cspScriptDefinition.h
 	../include/cspSystem.h
 	../include/cspVmCore.h
 	../src/cspOutputLogger.cpp

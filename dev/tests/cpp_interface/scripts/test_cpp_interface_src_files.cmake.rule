@@ -1,0 +1,3 @@
+# This file is used to automatically update the Visual Studio project files with folders4cmake.
+# If you remove it, you also need to remove the corresponding "auto_rebuild_src_files (YOUR_TARGET_NAME)" call from your "CMakeLists.txt".
+# Also don't forget to remove it from your "YOUR_TARGET_NAME_src_files.cmake" file list as well.

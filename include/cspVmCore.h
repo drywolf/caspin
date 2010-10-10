@@ -48,7 +48,7 @@ namespace csp
 	{
 	private:
 		typedef std::vector<NativePackageBase*> NativePackageList;
-		typedef std::map<avmplus::ScriptObject*, uint> StickyRefMap;
+		typedef std::map<avmplus::Atom, uint> StickyRefMap;
 
 		//-----------------------------------------------------------------------
 		class CodeContext : public avmplus::CodeContext
@@ -56,6 +56,15 @@ namespace csp
 		public:
 			inline CodeContext(avmplus::DomainEnv* env, const avmplus::BugCompatibility* bugCompatibility) 
 				: avmplus::CodeContext(env, bugCompatibility) {}
+		};
+		//-----------------------------------------------------------------------
+		class Toplevel : public avmplus::Toplevel
+		{
+		public:
+			Toplevel(avmplus::AbcEnv* abc) : avmplus::Toplevel(abc) {}
+
+			avmplus::ClassClosure* findClassInPool(int class_id, avmplus::PoolObject* pool)
+			{ return avmplus::Toplevel::findClassInPool(class_id, pool); }
 		};
 		//-----------------------------------------------------------------------
 
@@ -86,82 +95,89 @@ namespace csp
 		/// Get ActionScript 3 script definitions (classes, functions, etc.)
 		///-----------------------------------------------------------------------
 
-		/** Get a script definition via its identifier and package name */
-		ScriptDefinition getDefinition(avmplus::Stringp identifier, avmplus::Stringp package = NULL);
+		/** Get a multiname for the given identifier and package  */
+		avmplus::Multiname getMultiname(avmplus::Stringp identifier, avmplus::Stringp package = NULL);
 
-		/** Get a script definition via its identifier and package name */
-		ScriptDefinition getDefinition(const String& identifier, const String& package = "");
+		/** Get a class closure from the given identifier and package  */
+		avmplus::ClassClosure* getClassClosure(avmplus::Stringp identifier, avmplus::Stringp package = NULL);
+
+		/** Get a class closure from the given identifier and package  */
+		avmplus::ClassClosure* getClassClosure(const String& identifier, const String& package = "");
 
 		/** Get a method definition via its name and the containing script object */
-		static ScriptDefinition getMethodDefinition(avmplus::ScriptObject* object, avmplus::Stringp method_name);
+		static avmplus::MethodEnv* getMethodEnv(avmplus::ScriptObject* object, avmplus::Stringp method_name);
 
 		/** Get a method definition via its name and the containing script object */
-		static ScriptDefinition getMethodDefinition(avmplus::ScriptObject* object, const String& method_name);
+		static avmplus::MethodEnv* getMethodEnv(avmplus::ScriptObject* object, const String& method_name);
+
+		///-----------------------------------------------------------------------
+		/// Generic calling of ActionScript 3 functions (static class functions, object methods, etc.)
+		///-----------------------------------------------------------------------
+
+		/** Call a method of the given object via a previously obtained method definition */
+		static avmplus::Atom callFunction(avmplus::ScriptObject* obj, avmplus::MethodEnv* method_env, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(static avmplus::Atom, callFunction, avmplus::ScriptObject*, avmplus::MethodEnv*);
+
+		/** Call a method of the given object via its name */
+		static avmplus::Atom callFunction(avmplus::ScriptObject* obj, avmplus::Stringp function_name, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(static avmplus::Atom, callFunction, avmplus::ScriptObject*, avmplus::Stringp);
+
+		/** Call a method of the given object via its name */
+		static avmplus::Atom callFunction(avmplus::ScriptObject* obj, const String& function_name, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(static avmplus::Atom, callFunction, avmplus::ScriptObject*, const String&);
 
 		///-----------------------------------------------------------------------
 		/// Calling global ActionScript 3 script functions
 		///-----------------------------------------------------------------------
 
 		/** Call a global function via a script definition */
-		avmplus::Atom callGlobalFunction(const ScriptDefinition& definition, ArgumentList args);
+		avmplus::Atom callGlobalFunction(avmplus::ClassClosure* class_closure, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_1(avmplus::Atom, callGlobalFunction, avmplus::ClassClosure*);
 
 		/** Call a global function via its name */
-		avmplus::Atom callGlobalFunction(avmplus::Stringp function_name, avmplus::Stringp package = NULL, ArgumentList args = ArgumentList());
+		avmplus::Atom callGlobalFunction(avmplus::Stringp function_name, avmplus::Stringp package = NULL, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::Atom, callGlobalFunction, avmplus::Stringp, avmplus::Stringp);
 
 		/** Call a global function via its name */
-		avmplus::Atom callGlobalFunction(const String& function_name, const String& package = "", ArgumentList args = ArgumentList());
+		avmplus::Atom callGlobalFunction(const String& function_name, const String& package = "", int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::Atom, callGlobalFunction, const String&, const String&);
 
 		///-----------------------------------------------------------------------
 		/// Calling static ActionScript 3 class functions
 		///-----------------------------------------------------------------------
 
 		/** Call a static function of the given class via its name */
-		avmplus::Atom callStaticFunction(avmplus::Stringp class_name, avmplus::Stringp function_name, avmplus::Stringp package = NULL, ArgumentList args = ArgumentList());
+		avmplus::Atom callStaticFunction(avmplus::Stringp class_name, avmplus::Stringp function_name, avmplus::Stringp package = NULL, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_3(avmplus::Atom, callStaticFunction, avmplus::Stringp, avmplus::Stringp, avmplus::Stringp);
 
 		/** Call a static function of the given class via its name */
-		avmplus::Atom callStaticFunction(const String& class_name, const String& function_name, const String& package = "", ArgumentList args = ArgumentList());
+		avmplus::Atom callStaticFunction(const String& class_name, const String& function_name, const String& package = "", int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_3(avmplus::Atom, callStaticFunction, const String&, const String&, const String&);
 
 		///-----------------------------------------------------------------------
 		/// Creating ActionScript 3 objects
 		///-----------------------------------------------------------------------
 
 		/** Create an object via a previously obtained class definition */
-		avmplus::ScriptObject* createObject(const ScriptDefinition& definition, ArgumentList args = ArgumentList());
+		avmplus::ScriptObject* createObject(avmplus::ClassClosure* class_closure, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_1(avmplus::ScriptObject*, createObject, avmplus::ClassClosure*);
 
 		/** Create an object via its class name */
-		avmplus::ScriptObject* createObject(avmplus::Stringp class_name, avmplus::Stringp package = NULL, ArgumentList args = ArgumentList());
+		avmplus::ScriptObject* createObject(avmplus::Stringp class_name, avmplus::Stringp package = NULL, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::ScriptObject*, createObject, avmplus::Stringp, avmplus::Stringp);
 
 		/** Create an object via its class name */
-		avmplus::ScriptObject* createObject(const String& class_name, const String& package = "", ArgumentList args = ArgumentList());
+		avmplus::ScriptObject* createObject(const String& class_name, const String& package = "", int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::ScriptObject*, createObject, const String&, const String&);
 
 		/** Create an object via its class identifier and package identifier */
-		avmplus::ScriptObject* createObject(const uint& native_class_id, const uint& package_id, ArgumentList args = ArgumentList());
+		avmplus::ScriptObject* createNativeObject(const uint& native_class_id, const uint& package_id, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::ScriptObject*, createNativeObject, const uint&, const uint&);
 
-		/** Create an ActionScript 3 toplevel object via its class identifier
-		(see: http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/package-detail.html for a list of AS3 toplevel classes) */
-		avmplus::ScriptObject* createObject(const uint& toplevel_class_id, ArgumentList args = ArgumentList());
-
-		///-----------------------------------------------------------------------
-		/// Calling ActionScript 3 object methods
-		///-----------------------------------------------------------------------
-
-		/** Call a method of the given object via a previously obtained method definition */
-		static avmplus::Atom callObjectFunction2(avmplus::ScriptObject* obj, const ScriptDefinition& method_definition, avmplus::Atom* args, uint num_args = 0);
-
-		/** Call a method of the given object via its name */
-		static avmplus::Atom callObjectFunction2(avmplus::ScriptObject* obj, avmplus::Stringp function_name, avmplus::Atom* args, uint num_args = 0);
-
-		/** Call a method of the given object via its name */
-		static avmplus::Atom callObjectFunction2(avmplus::ScriptObject* obj, const String& function_name, avmplus::Atom* args, uint num_args = 0);
-
-		/** Call a method of the given object via a previously obtained method definition */
-		static avmplus::Atom callObjectFunction(avmplus::ScriptObject* obj, const ScriptDefinition& method_definition, ArgumentList args = ArgumentList());
-
-		/** Call a method of the given object via its name */
-		static avmplus::Atom callObjectFunction(avmplus::ScriptObject* obj, avmplus::Stringp function_name, ArgumentList args = ArgumentList());
-
-		/** Call a method of the given object via its name */
-		static avmplus::Atom callObjectFunction(avmplus::ScriptObject* obj, const String& function_name, ArgumentList args = ArgumentList());
+		/** Create a builtin ActionScript 3 object via its class identifier
+		(see: http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/package-detail.html for a list of AS3 builtin classes) */
+		avmplus::ScriptObject* createBuiltinObject(const uint& builtin_class_id, int num_args = 0, avmplus::Atom* args = NULL);
+		CSP_TEMPLATE_ARG_ARRAY_IMPL_1(avmplus::ScriptObject*, createBuiltinObject, const uint&);
 
 		///-----------------------------------------------------------------------
 		/// Managing ActionScript 3 object slots
@@ -177,38 +193,74 @@ namespace csp
 		static void initializeAllSlots(avmplus::ScriptObject* obj, const bool& recursive = false);
 
 		/** Add a sticky reference to the given script object to keep it from being garbage collected */
-		bool stickyObject(avmplus::ScriptObject* object);
+		bool stickyObject(avmplus::Atom object);
 
 		/** Remove the sticky reference to the given script object so it can be garbage collected again */
-		bool unstickyObject(avmplus::ScriptObject* object);
+		bool unstickyObject(avmplus::Atom object);
 
 		///-----------------------------------------------------------------------
-		/// C++ / ActionScript 3 type conversions
+		/// Convert C++ types to ActionScript 3 types
 		///-----------------------------------------------------------------------
 
-		/** Create an ActionScript 3 boolean value */
-		const avmplus::Atom& scriptBoolean(const bool& value) const;
+		/// base types
 
-		/** Create an ActionScript 3 integer value */
-		avmplus::Atom scriptInteger(const int& value);
+		/** Convert bool to an AS3 Boolean */
+		inline const avmplus::Atom& toScript(const bool& value) const
+		{ CSP_ENTER_GC(); if(value) return avmplus::AtomConstants::trueAtom; else return avmplus::AtomConstants::falseAtom; }
 
-		/** Create an ActionScript 3 number value */
-		avmplus::Atom scriptNumber(const double& value);
+		/** Convert int to an AS3 Integer */
+		inline avmplus::Stringp toScriptPtr(const int& value)
+		{ CSP_ENTER_GC(); return internInt(value); }
+		CSP_CONVERT_TO_ATOM_IMPL(const int&);
 
-		/** Create an ActionScript 3 string object */
-		avmplus::Atom scriptString(const char* value);
+		/** Convert double to an AS3 Number */
+		inline avmplus::Stringp toScriptPtr(const double& value)
+		{ CSP_ENTER_GC(); return internDouble(value); }
+		CSP_CONVERT_TO_ATOM_IMPL(const double&);
 
-		/** Convert an ActionScript 3 string object to a C++ STL string */
-		String stringFromAS3(avmplus::Stringp str);
+		/// strings
 
-		/** Convert a C++ STL string to an ActionScript 3 string object */
-		avmplus::Stringp stringToAS3(const String& str);
+		/** Convert a char* string to an AS3 String */
+		inline avmplus::Stringp toScriptPtr(const char* value)
+		{ CSP_ENTER_GC(); return internString(newStringLatin1(value)); }
+		CSP_CONVERT_TO_ATOM_IMPL(const char*);
 
-		/** Convert an ActionScript 3 UTF string object to a C++ STL string */
-		WString utfStringFromAS3(avmplus::Stringp str);
+		/** Convert a std::string to an AS3 String */
+		inline avmplus::Stringp toScriptPtr(const String& value)
+		{ CSP_ENTER_GC(); return internString(newStringLatin1(value.c_str())); }
+		CSP_CONVERT_TO_ATOM_IMPL(const String&);
 
-		/** Convert a C++ STL wide-string to an ActionScript 3 string object */
-		avmplus::Stringp utfStringToAS3(const WString& str);
+		/// UTF strings
+
+		/** Convert a wchar_t* string to an AS3 String */
+		inline avmplus::Stringp toScriptPtr(const wchar_t* value)
+		{ CSP_ENTER_GC(); return internStringUTF8((const char*)value); }
+		CSP_CONVERT_TO_ATOM_IMPL(const wchar_t*);
+
+		/** Convert a std::wstring to an AS3 UTF-String */
+		inline avmplus::Stringp toScriptPtr(const WString& value)
+		{ CSP_ENTER_GC(); return internStringUTF8((const char*)value.c_str()); }
+		CSP_CONVERT_TO_ATOM_IMPL(const WString&);
+
+		///-----------------------------------------------------------------------
+		/// Convert ActionScript 3 types to C++ types
+		///-----------------------------------------------------------------------
+
+		/// base types
+
+		/** Convert an AS3 Boolean to bool */
+		inline bool atomToBool(const avmplus::Atom& atom)
+		{ return (boolean(atom) != 0); }
+
+		/// strings
+
+		/** Convert an AS3 String to a std::string */
+		String toString(avmplus::Stringp str);
+
+		/// UTF strings
+
+		/** Convert an AS3 UTF-String to a std::wstring */
+		WString toUTFString(avmplus::Stringp str);
 
 		///-----------------------------------------------------------------------
 		/// ActionScript 3 code execution
@@ -228,7 +280,7 @@ namespace csp
 		///-----------------------------------------------------------------------
 
 		/** Get the avmplus Toplevel that is associated with this VmCore */
-		avmplus::Toplevel* getToplevel() const;
+		Toplevel* getToplevel() const;
 
 		/** Get the avmplus Domain that is associated with this VmCore */
 		avmplus::Domain* getDomain() const;
@@ -272,27 +324,16 @@ namespace csp
 
 		static MMgc::EnterFrame* mEF;
 
-		avmplus::Toplevel* mToplevel;
+		Toplevel* mToplevel;
 		avmplus::Domain* mDomain;
 		avmplus::DomainEnv* mDomainEnv;
 		CodeContext* mCodeContext;
-
-		avmplus::Atom* mArgumentArray;
 
 		avmplus::ArrayObject* mStickyRefArray;
 		StickyRefMap mStickyRefMap;
 
 		int mNextPackageID;
 		NativePackageList mPackages;
-
-		/** Internal helper method for creating string objects */
-		avmplus::Stringp newString(const char* str);
-
-		/** Internal helper method for creating string objects */
-		avmplus::Stringp newStringUTF8(const wchar_t* str);
-
-		/** Internal helper method for creating script objects */
-		avmplus::ScriptObject* constructObject(avmplus::ClassClosure* class_closure, ArgumentList& args);
 
 		// overridden
 		avmplus::String* readFileForEval(avmplus::String* referencingFilename, avmplus::String* filename);

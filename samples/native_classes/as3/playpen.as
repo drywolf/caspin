@@ -1,6 +1,6 @@
 package
 {
-	import avmplus.MyClass;
+	import my.pkg.MyClass;
 
 	// call the static functions
 	trace(MyClass.static_as3_function(2, 3));
@@ -12,12 +12,4 @@ package
 	// call the class methods
 	obj.as3_function();
 	trace(obj.native_function("123456789"));
-}
-
-package test
-{
-	public function hihi()
-	{
-		trace("hihi");
-	}
 }
