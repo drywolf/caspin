@@ -1,4 +1,7 @@
+set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
+
+include (caspin_globals)
 
 #-----------------------------------------------------------------------
 # CMAKE OPTIONS
@@ -11,7 +14,7 @@ option(sample_NATIVE_CLASSES_use_runtime_debugger "Use runtime debugger for the 
 
 # unix g++ flags
 if(UNIX)
-	set (CMAKE_CXX_FLAGS "-O -Wcast-align -Wdisabled-optimization -Wextra -Wformat=2 -Winit-self -Winvalid-pch -Wno-invalid-offsetof -Wno-switch -Wparentheses -Wpointer-arith -Wreorder -Wsign-compare -Wwrite-strings -Wno-ctor-dtor-privacy -Woverloaded-virtual -Wsign-promo -Wno-char-subscripts -fmessage-length=0 -fno-exceptions -fno-rtti -fno-check-new -fstrict-aliasing -fsigned-char -Wstrict-null-sentinel -Werror -Wempty-body -Wno-logical-op -Wmissing-field-initializers -Wstrict-aliasing=3 -Wno-array-bounds -Wno-clobbered -Wstrict-overflow=0 -funit-at-a-time -Wuninitialized")
+	set (CMAKE_CXX_FLAGS ${CASPIN_CXX_FLAGS})
 endif()
 
 # generic compiler switches
@@ -54,15 +57,15 @@ include_directories (${include_dirs})
 # unix fix for the tamarin libraries
 if(UNIX)
 
-	if(sample_MINIMAL_use_runtime_debugger)
+	if(sample_NATIVE_CLASSES_use_runtime_debugger)
 	
 		link_libraries (${tamarin_debugger_libs})
 	
-	else(sample_MINIMAL_use_runtime_debugger)
+	else(sample_NATIVE_CLASSES_use_runtime_debugger)
 	
 		link_libraries (${tamarin_libs})
 	
-	endif(sample_MINIMAL_use_runtime_debugger)
+	endif(sample_NATIVE_CLASSES_use_runtime_debugger)
 
 endif()
 
@@ -70,7 +73,7 @@ endif()
 add_executable (native_classes ${file_root})
 
 # automatically update the source files list
-#auto_rebuild_src_files (native_classes)
+auto_rebuild_src_files (native_classes)
 
 # the sample path
 set (sample_dir ${CMAKE_SOURCE_DIR}/samples/native_classes)
@@ -83,7 +86,7 @@ add_custom_command (
 	OUTPUT ${as3_dir}/myclasses.abc ${sample_dir}/include/myclasses.h ${sample_dir}/src/myclasses.cpp
 	MAIN_DEPENDENCY ${as3_dir}/myclasses.as
 	WORKING_DIRECTORY ${as3_dir}
-	COMMAND ${as3_dir}/build_myclasses.py
+	COMMAND python ${as3_dir}/build_myclasses.py
 )
 
 # automatically compile the sample AS3 files to ABC if necessary
@@ -92,7 +95,7 @@ add_custom_command (
 	MAIN_DEPENDENCY ${as3_dir}/playpen.as
 	DEPENDS ${as3_dir}/myclasses.abc
 	WORKING_DIRECTORY ${as3_dir}
-	COMMAND ${as3_dir}/build_playpen.py
+	COMMAND python ${as3_dir}/build_playpen.py
 )
 
 # enable the tamarin debugger

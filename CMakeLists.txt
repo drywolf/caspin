@@ -26,7 +26,6 @@ add_subdirectory (samples/native_classes/scripts)
 # generate test build files only if requested
 if(dev_BUILD_TESTS)
 #{
-	message ("Generating Developer Tests...")
 	add_subdirectory (dev/tests/cpp_interface/scripts)
 #}
 endif(dev_BUILD_TESTS)

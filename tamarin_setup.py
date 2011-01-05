@@ -9,10 +9,13 @@ import shutil
 import urllib2
 
 # the tamarin mercurial repository url
-tamarin_repository = "http://hg.mozilla.org/tamarin-redux"
+tamarin_repository = "http://hg.mozilla.org/tamarin-central"
 
 # the tamarin revision that shall be used with this version of caspin
-tamarin_revision = "95ff632db74b"
+tamarin_revision = "fbecf6c8a86f"
+
+# the download url for the latest ActionScript 3 Compiler version
+asc_url = "ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar"
 
 # the initial working directory
 cwd = os.getcwd()
@@ -30,22 +33,29 @@ colors.println("y", "checking out tamarin...\n(this may take serveral minutes de
 # invoke the mercurial command to check out tamarin
 os.system(cmd);
 
+# apply the changes to tamarin that are necessarry via a patch
+colors.println("y", "patching tamarin...")
+os.chdir(cwd + "/tamarin/")
+os.system("hg patch --no-commit ../tamarin_changes.diff")
+os.chdir(cwd)
+
 # on unix we can start the build process by calling the "tamarin_build.py" script
 if os.name == "posix":
 	os.system("python tamarin_build.py")
 
-# apply the changes to tamarin that are necessarry on win32
-elif os.name == "nt":
-	colors.println("y", "patching tamarin for use on win32...")
-	os.chdir(cwd + "/tamarin/")
-	os.system("hg patch --no-commit ../tamarin_changes.diff")
-
 # download asc.jar
 colors.println("y", "downloading \"asc.jar\"...")
-jar_url = urllib2.urlopen("ftp://ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar")
-jar_file = open(cwd + "/tamarin/utils/asc.jar", "wb")
-jar_file.write(jar_url.read())
-jar_file.close()
+try:
+	jar_url = urllib2.urlopen("ftp://" + asc_url)
+	jar_file = open(cwd + "/tamarin/utils/asc.jar", "wb")
+	jar_file.write(jar_url.read())
+	jar_file.close()
+except Exception:
+	colors.println("r", "FTP download failed, retrying via HTTP...")
+	jar_url = urllib2.urlopen("http://" + asc_url)
+	jar_file = open(cwd + "/tamarin/utils/asc.jar", "wb")
+	jar_file.write(jar_url.read())
+	jar_file.close()
 
 # display some final information
 if os.name == "posix":

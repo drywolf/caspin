@@ -1,4 +1,7 @@
+set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
+
+include (caspin_globals)
 
 #-----------------------------------------------------------------------
 # CMAKE OPTIONS
@@ -11,7 +14,7 @@ option(sample_MINIMAL_use_runtime_debugger "Use runtime debugger for the minimal
 
 # unix g++ flags
 if(UNIX)
-	set (CMAKE_CXX_FLAGS "-O -Wcast-align -Wdisabled-optimization -Wextra -Wformat=2 -Winit-self -Winvalid-pch -Wno-invalid-offsetof -Wno-switch -Wparentheses -Wpointer-arith -Wreorder -Wsign-compare -Wwrite-strings -Wno-ctor-dtor-privacy -Woverloaded-virtual -Wsign-promo -Wno-char-subscripts -fmessage-length=0 -fno-exceptions -fno-rtti -fno-check-new -fstrict-aliasing -fsigned-char -Wstrict-null-sentinel -Werror -Wempty-body -Wno-logical-op -Wmissing-field-initializers -Wstrict-aliasing=3 -Wno-array-bounds -Wno-clobbered -Wstrict-overflow=0 -funit-at-a-time -Wuninitialized")
+	set (CMAKE_CXX_FLAGS ${CASPIN_CXX_FLAGS})
 endif()
 
 # generic compiler switches
@@ -80,7 +83,7 @@ add_custom_command (
 	OUTPUT ${as3_dir}/minimal.abc
 	MAIN_DEPENDENCY ${as3_dir}/minimal.as
 	WORKING_DIRECTORY ${as3_dir}
-	COMMAND ${as3_dir}/build.py
+	COMMAND python ${as3_dir}/build.py
 )
 
 # enable the tamarin debugger

@@ -9,36 +9,39 @@
 #include "test_avm_string_methods.h"
 #include "test_csp_string_methods.h"
 
-#ifdef WIN32
-#	define TEST_PATH csp::String("")
-#else
-#	define TEST_PATH csp::String("")
-#endif
 //-----------------------------------------------------------------------
 class testLog : public csp::OutputListener
 {
 public:
 	virtual ~testLog(){}
 
-	std::stringstream str;
+	csp::String str;
 
 	void output(const csp::String& message)
 	{
 		std::cout << message << std::endl;
-		str << message << std::endl;
+		str += message + "\n";
 	}
 };
 //-----------------------------------------------------------------------
 int main(int argc, char** argv)
 {
+	csp::String test_target = "";
+
 	if(argc < 2)
 	{
-		std::cout << "No target interface provided, aborting test..." << std::endl;
-		std::cout << "Valid targets are: { avm_class , avm_string , csp_string }" << std::endl;
-		return 1;
+		std::cout << "No test target parameter provided..." << std::endl;
+		std::cout << "Select a target:" << std::endl;
+		std::cout << "1 - avm_class" << std::endl;
+		std::cout << "2 - avm_string" << std::endl;
+		std::cout << "3 - csp_string" << std::endl;
+		int target = std::cin.get();
+		test_target = (target == 1 ? "avm_class" : (target == 2 ? "avm_string" : "csp_string"));
 	}
-
-	csp::String test_target(argv[1]);
+	else
+	{
+		test_target = argv[1];
+	}
 
 	csp::VmCore::createGcHeap();
 
@@ -50,11 +53,11 @@ int main(int argc, char** argv)
 	testLog logger;
 	core->addListener(&logger);
 
-	NativePackage(core, caspin_base);
+	NativePackage(core, avmplus::NativeID, caspin_base);
 
 	core->initializePackages();
 
-	bool ok = core->executeFile(TEST_PATH + "as3/test_cpp_interface.abc");
+	bool ok = core->executeFile("as3/test_cpp_interface.abc");
 
 	if(ok)
 	{
@@ -94,13 +97,16 @@ int main(int argc, char** argv)
 		"ClassFunctions.Class.member_function1(arg0)\n" + 
 		"arg0\n";
 
-	if(logger.str.str() == correct_log)
+	if(logger.str == correct_log)
 		std::cout << 
 		"-----------------------------------------------------" << std::endl << 
 		" TEST SUCCESSFUL" << std::endl << 
 		"-----------------------------------------------------" << std::endl;
 	else
-		std::cout << "TEST FAILED" << std::endl << std::endl;
+		std::cout << 
+		"-----------------------------------------------------" << std::endl << 
+		" TEST FAILED" << std::endl << 
+		"-----------------------------------------------------" << std::endl;
 
 	CSP_DESTROY_VMCORE(core);
 

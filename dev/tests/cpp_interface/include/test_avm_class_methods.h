@@ -14,7 +14,10 @@ class avm_class_test : public test_base
 		avmplus::Atom args[] = { 0, core->toScript("arg0") };
 		avmplus::Atom result = core->callGlobalFunction(function1, args);
 
-		core->console << core->atomToString(result) << "\n";
+		if(result != nullObjectAtom)
+			core->console << core->atomToString(result) << "\n";
+		else
+			core->console << "null\n";
 	}
 	//-----------------------------------------------------------------------
 	void test_static_class_functions(csp::VmCore* core)
@@ -26,7 +29,10 @@ class avm_class_test : public test_base
 		avmplus::MethodEnv* method = core->getMethodEnv(clazz, "static_function1");
 		avmplus::Atom result = csp::VmCore::callFunction(clazz, method, args);
 
-		core->console << core->atomToString(result) << "\n";
+		if(result != nullObjectAtom)
+			core->console << core->atomToString(result) << "\n";
+		else
+			core->console << "null\n";
 	}
 	//-----------------------------------------------------------------------
 	avmplus::ScriptObject* test_class_construction(csp::VmCore* core)
@@ -55,7 +61,10 @@ class avm_class_test : public test_base
 			member_function1, 
 			args);
 
-		core->console << core->atomToString(result) << "\n";
+		if(result != nullObjectAtom)
+			core->console << core->atomToString(result) << "\n";
+		else
+			core->console << "null\n";
 	}
 	//-----------------------------------------------------------------------
 };

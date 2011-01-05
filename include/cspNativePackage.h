@@ -47,7 +47,11 @@ namespace csp
 	class NativePackageBase
 	{
 	public:
-		NativePackageBase(VmCore* core, uint num_classes) : mID(-1), mCore(core), mNumClasses(num_classes) { }
+		NativePackageBase(VmCore* core, uint num_classes) 
+			: mID(-1), 
+			mCore(core), 
+			mNumClasses(num_classes) { }
+
 		virtual ~NativePackageBase() {}
 
 		/** Get the PoolObject that contains the ActionScript 3 definitions */
@@ -69,8 +73,8 @@ namespace csp
 
 	protected:
 		int mID;
-		uint mNumClasses;
 		VmCore* mCore;
+		uint mNumClasses;
 		avmplus::PoolObject* mPool;
 
 		/** The abstract method that needs to do the binding work */
@@ -78,20 +82,20 @@ namespace csp
 	};
 
 	/** The macro that automatically implements the abstract NativePackageBase class */
-#define NativePackage(core, package) \
+#define NativePackage(core, native_ns, package) \
 	class core##_Impl_##package : public csp::NativePackageBase \
 	{ \
 	public: \
 		core##_Impl_##package(csp::VmCore* core) \
-			: csp::NativePackageBase(core, avmplus::NativeID::package##_abc_class_count) { initPool(); } \
+			: csp::NativePackageBase(core, native_ns::package##_abc_class_count) { initPool(); } \
 	protected: \
 		void initPool() \
 		{ \
 			MMGC_GCENTER(mCore->GetGC()); \
-			mPool = avmplus::NativeID::initBuiltinABC_##package(mCore, mCore->builtinDomain); \
+			mPool = native_ns::initBuiltinABC_##package(mCore, mCore->builtinDomain); \
 			mID = mCore->addPackage(this); \
 		} \
-	} core##_##package(core);
+	} PKG_##core##_##package(core);
 }
 
 #endif

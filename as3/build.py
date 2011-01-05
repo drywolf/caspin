@@ -12,7 +12,7 @@ classes = [
 ]
 
 # base command for compiling the native class package
-cmd = caspin_home + "/tools/cspcompile.py caspin_base "
+cmd = "python " + caspin_home + "/tools/cspcompile.py caspin_base "
 
 # add the classes to the build command
 for str in classes:
@@ -22,4 +22,4 @@ for str in classes:
 os.system(cmd)
 
 # generate the glue code for the native package
-os.system(caspin_home + "/tools/cspgenerate.py caspin_base")
+os.system("python " + caspin_home + "/tools/cspgenerate.py caspin_base")

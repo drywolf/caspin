@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 	core->addListener(&logger);
 
 	// register the caspin base package
-	NativePackage(core, caspin_base);
+	NativePackage(core, avmplus::NativeID, caspin_base);
 
 	// initialize the registered packages
 	core->initializePackages();
@@ -54,24 +54,20 @@ int main(int argc, char* argv[])
 		args[i] = arg_atom;
 	}
 
-	avmplus::ClassClosure* main = core->getClassClosure("main", "");
-	avmplus::Atom return_value = core->callGlobalFunction(main);
 	// call the main function of the .abc file
-	//avmplus::Atom return_value = core->callGlobalFunction("main", "Min");
+	avmplus::Atom return_value = core->callGlobalFunction("main", "", argc-1, args);
 
 	delete[] args;
 
 	// print the integer value that was returned from the AS3 main function
-	//std::cout << "AS3-main() return value: " << core->integer(return_value) << std::endl;
+	std::cout << "AS3-main() return value: " << core->integer(return_value) << std::endl;
 
 	// destroy the virtual machine instance
 	CSP_DESTROY_VMCORE(core);
 
 	// clean up the garbage collector heap
 	if(ok)
-	{
 		csp::VmCore::destroyGcHeap();
-	}
 
 	std::cout << std::endl << "-----------End------------" << std::endl;
 	std::cout << std::endl << "Press ENTER to continue..." << std::endl;

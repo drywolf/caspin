@@ -51,19 +51,12 @@ namespace csp
 		typedef std::map<avmplus::Atom, uint> StickyRefMap;
 
 		//-----------------------------------------------------------------------
-		class CodeContext : public avmplus::CodeContext
+		class VmToplevel : public avmplus::Toplevel
 		{
 		public:
-			inline CodeContext(avmplus::DomainEnv* env, const avmplus::BugCompatibility* bugCompatibility) 
-				: avmplus::CodeContext(env, bugCompatibility) {}
-		};
-		//-----------------------------------------------------------------------
-		class Toplevel : public avmplus::Toplevel
-		{
-		public:
-			Toplevel(avmplus::AbcEnv* abc) : avmplus::Toplevel(abc) {}
+			VmToplevel(avmplus::AbcEnv* abc) : avmplus::Toplevel(abc) {}
 
-			avmplus::ClassClosure* findClassInPool(int class_id, avmplus::PoolObject* pool)
+			inline avmplus::ClassClosure* findClassInPool(int class_id, avmplus::PoolObject* pool)
 			{ return avmplus::Toplevel::findClassInPool(class_id, pool); }
 		};
 		//-----------------------------------------------------------------------
@@ -205,7 +198,7 @@ namespace csp
 		/// base types
 
 		/** Convert bool to an AS3 Boolean */
-		inline const avmplus::Atom& toScript(const bool& value) const
+		inline const avmplus::Atom& toScript(const bool& value)
 		{ CSP_ENTER_GC(); if(value) return avmplus::AtomConstants::trueAtom; else return avmplus::AtomConstants::falseAtom; }
 
 		/** Convert int to an AS3 Integer */
@@ -280,7 +273,7 @@ namespace csp
 		///-----------------------------------------------------------------------
 
 		/** Get the avmplus Toplevel that is associated with this VmCore */
-		Toplevel* getToplevel() const;
+		VmToplevel* getToplevel() const;
 
 		/** Get the avmplus Domain that is associated with this VmCore */
 		avmplus::Domain* getDomain() const;
@@ -324,10 +317,9 @@ namespace csp
 
 		static MMgc::EnterFrame* mEF;
 
-		Toplevel* mToplevel;
+		VmToplevel* mToplevel;
 		avmplus::Domain* mDomain;
 		avmplus::DomainEnv* mDomainEnv;
-		CodeContext* mCodeContext;
 
 		avmplus::ArrayObject* mStickyRefArray;
 		StickyRefMap mStickyRefMap;

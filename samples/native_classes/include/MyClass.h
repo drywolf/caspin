@@ -14,7 +14,7 @@ namespace my { namespace pkg {
 
 		int native_function(avmplus::Stringp str);
 
-		CSP_INST_SLOTS(MyClassInstance);
+		CSP_SLOTS(MyClassInstance, my_pkg_);
 	};
 	//-----------------------------------------------------------------------
 	class MyClassClass : public avmplus::ClassClosure
@@ -26,7 +26,7 @@ namespace my { namespace pkg {
 		avmplus::Stringp static_native_function();
 
 		CSP_CLASS_CREATE_INSTANCE(MyClassClass, MyClassInstance);
-		CSP_CLASS_SLOTS(MyClassClass);
+		CSP_SLOTS(MyClassClass, my_pkg_);
 	};
 	//-----------------------------------------------------------------------
 }}

@@ -1,3 +1,6 @@
+#ifndef __CASPIN_BASE_GLUE_H__
+#define __CASPIN_BASE_GLUE_H__
+
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
@@ -62,14 +65,8 @@ const uint32_t abcclass_caspin_System = 0;
 /* methods */
 const uint32_t caspin_System_trace = 4;
 
-extern AvmBox caspin_System_trace_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
-
-#ifdef VMCFG_INDIRECT_NATIVE_THUNKS
-
-extern AvmBox caspin_base_v2a_oo_thunk(AvmMethodEnv env, uint32_t argc, AvmBox* argv);
+extern avmplus::AvmBox caspin_base_v2a_oo_thunk(AvmMethodEnv env, uint32_t argc, avmplus::AvmBox* argv);
 #define caspin_System_trace_thunk  caspin_base_v2a_oo_thunk
-
-#endif // VMCFG_INDIRECT_NATIVE_THUNKS
 
 class SlotOffsetsAndAsserts;
 // caspin::System$
@@ -87,3 +84,5 @@ private:
 //-----------------------------------------------------------
 
 } }
+
+#endif // __CASPIN_BASE_GLUE_H__

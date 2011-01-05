@@ -60,7 +60,7 @@ namespace csp
 		ListenerMap mListeners;
 
 		/** The overridden write method from avmplus::OutputStream */
-		void write(const char* utf8);
+		int write(const void *buffer, int count);
 
 		/** Print a message to all listeners */
 		void printMessage(const String& message);

@@ -17,7 +17,10 @@ class avm_string_test : public test_base
 			core->toScriptPtr("GlobalFunctions"), 
 			args);
 
-		core->console << core->atomToString(result) << "\n";
+		if(result != nullObjectAtom)
+			core->console << core->atomToString(result) << "\n";
+		else
+			core->console << "null\n";
 	}
 	//-----------------------------------------------------------------------
 	void test_static_class_functions(csp::VmCore* core)
@@ -34,7 +37,10 @@ class avm_string_test : public test_base
 			core->toScriptPtr("ClassFunctions"), 
 			args);
 
-		core->console << core->atomToString(result) << "\n";
+		if(result != nullObjectAtom)
+			core->console << core->atomToString(result) << "\n";
+		else
+			core->console << "null\n";
 	}
 	//-----------------------------------------------------------------------
 	avmplus::ScriptObject* test_class_construction(csp::VmCore* core)
@@ -62,7 +68,10 @@ class avm_string_test : public test_base
 			core->toScriptPtr("member_function1"), 
 			args);
 
-		core->console << core->atomToString(result) << "\n";
+		if(result != nullObjectAtom)
+			core->console << core->atomToString(result) << "\n";
+		else
+			core->console << "null\n";
 	}
 	//-----------------------------------------------------------------------
 };

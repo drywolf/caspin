@@ -46,8 +46,6 @@ set (file_root_tamarin
 	${tamarin_path}/shell/DebugCLI.h
 	${tamarin_path}/shell/FileInputStream.cpp
 	${tamarin_path}/shell/FileInputStream.h
-	${tamarin_path}/VMPI/AvmAssert.cpp
-	${tamarin_path}/VMPI/AvmAssert.h
 )
 
 # tamarin -> [unix] files

@@ -110,8 +110,18 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #define CSP_CORE static_cast<csp::VmCore*>(core())
 #define CSP_CORE_EX(name) static_cast<csp::VmCore*>(name)
 
-#define CSP_CLASS_SLOTS(name) DECLARE_SLOTS_##name
-#define CSP_INST_SLOTS(name) DECLARE_SLOTS_##name
+#ifdef CSP_USE_NATIVEGEN_FIX
+#	define CSP_SLOTS(name, package) DECLARE_SLOTS_##package##name
+#else
+#	define CSP_SLOTS(name, package) DECLARE_SLOTS_##name
+#endif
+
+#define CSP_INST_CTOR(name, base) \
+	name(avmplus::VTable* vtable, avmplus::ScriptObject* prototype) : base(vtable, prototype) {}
+
+#define CSP_INST_CDTOR(name, base) \
+	name(::avmplus::VTable* vtable, ::avmplus::ScriptObject* prototype) : base(vtable, prototype) {} \
+	virtual ~name() {}
 
 /** A macro for adding the required class methods to an ActionScript 3 native class definition */
 #define CSP_CLASS_CREATE_INSTANCE(clazz, inst) \
@@ -121,19 +131,19 @@ avmplus::ScriptObject* createInstance(avmplus::VTable* ivtable, avmplus::ScriptO
 }
 
 /** A macro for creating a native ActionScript 3 class definition */
-#define CSP_DEFINE_CLASS(clazz, inst) \
+#define CSP_DEFINE_CLASS(clazz, inst, package) \
 class clazz : public avmplus::ClassClosure \
 { \
 public: \
 	clazz(avmplus::VTable* cvtable) : avmplus::ClassClosure(cvtable) \
 	{ \
-		AvmAssert(traits()->getSizeOfInstance() == sizeof(inst)); \
+		AvmAssert(traits()->getSizeOfInstance() == sizeof(clazz)); \
 		createVanillaPrototype(); \
 	} \
 	\
 	CSP_CLASS_CREATE_INSTANCE(clazz, inst); \
 	\
-	CSP_CLASS_SLOTS(clazz); \
+	CSP_SLOTS(clazz, package); \
 }
 
 namespace MMgc

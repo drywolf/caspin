@@ -65,11 +65,11 @@ namespace csp
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	void OutputLogger::write(const char* utf8)
+	int OutputLogger::write(const void *buffer, int count)
 	{
-		unsigned int count = strlen(utf8);
+		const char* buf = (const char*)buffer;
 
-		if(utf8[count-1] == '\n')
+		if(buf[count-1] == '\n')
 		{
 			if(mMessage.length())
 			{
@@ -79,8 +79,10 @@ namespace csp
 		}
 		else
 		{
-			mMessage.append(utf8, count);
+			mMessage.append(buf, count);
 		}
+
+		return count;
 	}
 	//-----------------------------------------------------------------------
 	void OutputLogger::printMessage(const String& message)
