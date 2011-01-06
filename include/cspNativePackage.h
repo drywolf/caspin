@@ -66,6 +66,7 @@ namespace csp
 			return mID;
 		}
 
+		/** Get the number of native classes that are contained in this package */
 		const uint& getNumClasses() const
 		{
 			return mNumClasses;
@@ -77,7 +78,7 @@ namespace csp
 		uint mNumClasses;
 		avmplus::PoolObject* mPool;
 
-		/** The abstract method that needs to do the binding work */
+		/** The abstract method that does the binding work */
 		virtual void initPool() = 0;
 	};
 

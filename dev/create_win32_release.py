@@ -60,7 +60,6 @@ def copy_tamarin_headers(target):
 	print ">> extensions"
 	files.copy("../tamarin/extensions/*.h",		target + "/caspin/tamarin/extensions/")
 
-	shutil.copy("../tamarin/core/opcodes.tbl",			target + "/caspin/tamarin/core/")
 	shutil.copy("../tamarin/core/builtin.abc",			target + "/caspin/tamarin/core/")
 	shutil.copy("../tamarin/shell/avmshell-features.h",	target + "/caspin/tamarin/shell/")
 	shutil.copy("../tamarin/utils/asc.jar",				target + "/caspin/tamarin/utils/")
@@ -112,6 +111,10 @@ def copy_tamarin_libs_vc10():
 # ---------------- MAIN ----------------
 # --------------------------------------
 target = sys.argv[1]
+
+if target != "vc9" and target != "vc10":
+	print "Error: invalid target specified: '" + target + "'"
+	exit()
 
 create_dirs(target)
 

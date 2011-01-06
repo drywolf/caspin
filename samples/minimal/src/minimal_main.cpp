@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
 	avmplus::Atom* args = new avmplus::Atom[argc];
 
-	// convert the C++ program arguments to an AS3 equivalent
+	// convert the C program arguments to AS3 equivalents
 	// i=1 --> ignore program path argument
 	for(int i=1; i<argc; ++i)
 	{

@@ -51,11 +51,13 @@ namespace csp
 		typedef std::map<avmplus::Atom, uint> StickyRefMap;
 
 		//-----------------------------------------------------------------------
+		/** A small class to get access to a protected avmplus::Toplevel member function */
 		class VmToplevel : public avmplus::Toplevel
 		{
 		public:
 			VmToplevel(avmplus::AbcEnv* abc) : avmplus::Toplevel(abc) {}
 
+			/** Get a ClassClosure that is contained in the given PoolObject */
 			inline avmplus::ClassClosure* findClassInPool(int class_id, avmplus::PoolObject* pool)
 			{ return avmplus::Toplevel::findClassInPool(class_id, pool); }
 		};
@@ -107,15 +109,18 @@ namespace csp
 		/// Generic calling of ActionScript 3 functions (static class functions, object methods, etc.)
 		///-----------------------------------------------------------------------
 
-		/** Call a method of the given object via a previously obtained method definition */
+		/** Call a method of the given object via a previously obtained method definition
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		static avmplus::Atom callFunction(avmplus::ScriptObject* obj, avmplus::MethodEnv* method_env, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(static avmplus::Atom, callFunction, avmplus::ScriptObject*, avmplus::MethodEnv*);
 
-		/** Call a method of the given object via its name */
+		/** Call a method of the given object via its name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		static avmplus::Atom callFunction(avmplus::ScriptObject* obj, avmplus::Stringp function_name, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(static avmplus::Atom, callFunction, avmplus::ScriptObject*, avmplus::Stringp);
 
-		/** Call a method of the given object via its name */
+		/** Call a method of the given object via its name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		static avmplus::Atom callFunction(avmplus::ScriptObject* obj, const String& function_name, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(static avmplus::Atom, callFunction, avmplus::ScriptObject*, const String&);
 
@@ -123,15 +128,18 @@ namespace csp
 		/// Calling global ActionScript 3 script functions
 		///-----------------------------------------------------------------------
 
-		/** Call a global function via a script definition */
+		/** Call a global function via a script definition
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::Atom callGlobalFunction(avmplus::ClassClosure* class_closure, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_1(avmplus::Atom, callGlobalFunction, avmplus::ClassClosure*);
 
-		/** Call a global function via its name */
+		/** Call a global function via its name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::Atom callGlobalFunction(avmplus::Stringp function_name, avmplus::Stringp package = NULL, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::Atom, callGlobalFunction, avmplus::Stringp, avmplus::Stringp);
 
-		/** Call a global function via its name */
+		/** Call a global function via its name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::Atom callGlobalFunction(const String& function_name, const String& package = "", int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::Atom, callGlobalFunction, const String&, const String&);
 
@@ -139,11 +147,13 @@ namespace csp
 		/// Calling static ActionScript 3 class functions
 		///-----------------------------------------------------------------------
 
-		/** Call a static function of the given class via its name */
+		/** Call a static function of the given class via its name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::Atom callStaticFunction(avmplus::Stringp class_name, avmplus::Stringp function_name, avmplus::Stringp package = NULL, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_3(avmplus::Atom, callStaticFunction, avmplus::Stringp, avmplus::Stringp, avmplus::Stringp);
 
-		/** Call a static function of the given class via its name */
+		/** Call a static function of the given class via its name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::Atom callStaticFunction(const String& class_name, const String& function_name, const String& package = "", int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_3(avmplus::Atom, callStaticFunction, const String&, const String&, const String&);
 
@@ -151,24 +161,28 @@ namespace csp
 		/// Creating ActionScript 3 objects
 		///-----------------------------------------------------------------------
 
-		/** Create an object via a previously obtained class definition */
+		/** Create an object via a previously obtained class definition
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::ScriptObject* createObject(avmplus::ClassClosure* class_closure, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_1(avmplus::ScriptObject*, createObject, avmplus::ClassClosure*);
 
-		/** Create an object via its class name */
+		/** Create an object via its class name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::ScriptObject* createObject(avmplus::Stringp class_name, avmplus::Stringp package = NULL, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::ScriptObject*, createObject, avmplus::Stringp, avmplus::Stringp);
 
-		/** Create an object via its class name */
+		/** Create an object via its class name
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::ScriptObject* createObject(const String& class_name, const String& package = "", int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::ScriptObject*, createObject, const String&, const String&);
 
-		/** Create an object via its class identifier and package identifier */
+		/** Create an object via its class identifier and package identifier
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::ScriptObject* createNativeObject(const uint& native_class_id, const uint& package_id, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_2(avmplus::ScriptObject*, createNativeObject, const uint&, const uint&);
 
 		/** Create a builtin ActionScript 3 object via its class identifier
-		(see: http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/package-detail.html for a list of AS3 builtin classes) */
+		@warning If you pass an argument list to this function, keep the first entry of the array empty (i.e. "0") for internal usage */
 		avmplus::ScriptObject* createBuiltinObject(const uint& builtin_class_id, int num_args = 0, avmplus::Atom* args = NULL);
 		CSP_TEMPLATE_ARG_ARRAY_IMPL_1(avmplus::ScriptObject*, createBuiltinObject, const uint&);
 
