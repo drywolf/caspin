@@ -1,7 +1,7 @@
 set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 
-include (caspin_globals)
+include (build_tools)
 
 #-----------------------------------------------------------------------
 # PREPROCESSOR SETTINGS
@@ -42,6 +42,11 @@ include (test_cpp_interface_src_files)
 #-----------------------------------------------------------------------
 # BUILD SETTINGS & COMPILATION
 #-----------------------------------------------------------------------
+
+if(WIN32)
+	# link statically against the MSVCRT
+	link_static_crt()
+endif(WIN32)
 
 # build output directory
 set (EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/dev/tests/cpp_interface/bin)

@@ -282,30 +282,19 @@ namespace csp
 
 		Atom result = nullObjectAtom;
 
-		TRY(core, kCatchAction_ReportAsError)
-		{
-			if(method_env == NULL)
-			{
-				core->throwException("Invalid method definition at VmCore::callFunction(...)");
-			}
+		if(method_env == NULL)
+			core->throwException("Invalid method definition at VmCore::callFunction(...)");
 
-			if(num_args == 0 || args == NULL)
-			{
-				Atom this_atom = obj->atom();
-				result = method_env->coerceEnter(0, &this_atom);
-			}
-			else
-			{
-				args[0] = obj->atom();
-				result = method_env->coerceEnter(num_args, args);
-			}
-		}
-		CATCH(Exception* exception)
+		if(num_args == 0 || args == NULL)
 		{
-			core->printException(exception);
+			Atom this_atom = obj->atom();
+			result = method_env->coerceEnter(0, &this_atom);
 		}
-		END_CATCH;
-		END_TRY;
+		else
+		{
+			args[0] = obj->atom();
+			result = method_env->coerceEnter(num_args, args);
+		}
 
 		return result;
 	}
@@ -340,30 +329,19 @@ namespace csp
 
 		Atom result = nullObjectAtom;
 
-		TRY(this, kCatchAction_ReportAsError)
-		{
-			if(class_closure == NULL)
-			{
-				throwException("Invalid or empty class closure for global function call");
-			}
+		if(class_closure == NULL)
+			throwException("Invalid or empty class closure for global function call");
 
-			if(num_args == 0 || args == NULL)
-			{
-				Atom clazz = class_closure->atom();
-				result = class_closure->call(0, &clazz);
-			}
-			else
-			{
-				args[0] = class_closure->atom();
-				result = class_closure->call(num_args, args);
-			}
-		}
-		CATCH(Exception* exception)
+		if(num_args == 0 || args == NULL)
 		{
-			printException(exception);
+			Atom clazz = class_closure->atom();
+			result = class_closure->call(0, &clazz);
 		}
-		END_CATCH;
-		END_TRY;
+		else
+		{
+			args[0] = class_closure->atom();
+			result = class_closure->call(num_args, args);
+		}
 
 		return result;
 	}
@@ -390,23 +368,14 @@ namespace csp
 
 		Atom result = nullObjectAtom;
 
-		TRY(this, kCatchAction_ReportAsError)
-		{
-			ClassClosure* class_closure = getClassClosure(class_name, package);
+		ClassClosure* class_closure = getClassClosure(class_name, package);
 
-			if(class_closure == NULL)
-			{
-				throwException("Unable to find class \"" + toString(class_name) + "\" [" + toString(package) + "]");
-			}
-
-			result = callFunction(class_closure, function_name, num_args, args);
-		}
-		CATCH(Exception* exception)
+		if(class_closure == NULL)
 		{
-			printException(exception);
+			throwException("Unable to find class \"" + toString(class_name) + "\" [" + toString(package) + "]");
 		}
-		END_CATCH;
-		END_TRY;
+
+		result = callFunction(class_closure, function_name, num_args, args);
 
 		return result;
 	}
@@ -427,38 +396,25 @@ namespace csp
 		CSP_ENTER_GC();
 
 		if(!class_closure)
-		{
 			throwException("Error at 'VmCore::createObject(...)': NULL ClassClosure given");
-		}
 
-		ScriptObject* object = NULL;
+		Atom object_atom;
 
-		TRY(this, kCatchAction_ReportAsError)
+		if(num_args == 0 || args == NULL)
 		{
-			Atom object_atom;
-
-			if(num_args == 0 || args == NULL)
-			{
-				Atom null_atom = nullObjectAtom;
-				object_atom = class_closure->construct(0, &null_atom);
-			}
-			else
-			{
-				args[0] = nullObjectAtom;
-				object_atom = class_closure->construct(num_args, args);
-			}
-
-			object = AvmCore::atomToScriptObject(object_atom);
-
-			// otherwise it would be immediately collected by the GC
-			object->IncrementRef();
+			Atom null_atom = nullObjectAtom;
+			object_atom = class_closure->construct(0, &null_atom);
 		}
-		CATCH(Exception* exception)
+		else
 		{
-			printException(exception);
+			args[0] = nullObjectAtom;
+			object_atom = class_closure->construct(num_args, args);
 		}
-		END_CATCH;
-		END_TRY;
+
+		ScriptObject* object = AvmCore::atomToScriptObject(object_atom);
+
+		// otherwise it would be immediately collected by the GC
+		object->IncrementRef();
 
 		return object;
 	}
@@ -483,58 +439,29 @@ namespace csp
 	{
 		CSP_ENTER_GC();
 
-		TRY(this, kCatchAction_ReportAsError)
-		{
-			if(package_id > mPackages.size()-1)
-			{
-				throwException("Error at 'VmCore::createNativeObject(...)': package_id out of bounds");
-			}
+		if(package_id > mPackages.size()-1)
+			throwException("Error at 'VmCore::createNativeObject(...)': package_id out of bounds");
 
-			NativePackageBase* package = mPackages[package_id];
+		NativePackageBase* package = mPackages[package_id];
 
-			if(native_class_id > package->getNumClasses()-1)
-			{
-				throwException("Error at 'VmCore::createNativeObject(...)': native_class_id out of bounds");
-			}
+		if(native_class_id > package->getNumClasses()-1)
+			throwException("Error at 'VmCore::createNativeObject(...)': native_class_id out of bounds");
 
-			ClassClosure* class_closure = mToplevel->findClassInPool(native_class_id, package->getPool());
+		ClassClosure* class_closure = mToplevel->findClassInPool(native_class_id, package->getPool());
 
-			return createObject(class_closure, num_args, args);
-		}
-		CATCH(Exception* exception)
-		{
-			printException(exception);
-		}
-		END_CATCH;
-		END_TRY;
-
-		return NULL;
+		return createObject(class_closure, num_args, args);
 	}
 	//-----------------------------------------------------------------------
 	ScriptObject* VmCore::createBuiltinObject(const uint& builtin_class_id, int num_args, Atom* args)
 	{
 		CSP_ENTER_GC();
 
-		TRY(this, kCatchAction_ReportAsError)
-		{
-			if(builtin_class_id > NativeID::builtin_abc_class_count-1)
-			{
-				throwException("Error at 'VmCore::createBuiltinObject(...)': builtin_class_id out of bounds");
-				return NULL;
-			}
+		if(builtin_class_id > NativeID::builtin_abc_class_count-1)
+			throwException("Error at 'VmCore::createBuiltinObject(...)': builtin_class_id out of bounds");
 
-			ClassClosure* class_closure = mToplevel->getBuiltinClass(builtin_class_id);
+		ClassClosure* class_closure = mToplevel->getBuiltinClass(builtin_class_id);
 
-			return createObject(class_closure, num_args, args);
-		}
-		CATCH(Exception* exception)
-		{
-			printException(exception);
-		}
-		END_CATCH;
-		END_TRY;
-
-		return NULL;
+		return createObject(class_closure, num_args, args);
 	}
 	//-----------------------------------------------------------------------
 	bool VmCore::setSlotObject(ScriptObject* obj, const String& slot_name, ScriptObject* slot_obj)
@@ -661,7 +588,7 @@ namespace csp
 	//-----------------------------------------------------------------------
 	String VmCore::toString(Stringp str)
 	{
-		MMGC_GCENTER(GetGC());
+		CSP_ENTER_GC();
 
 		String result;
 		unsigned int len = str->length();

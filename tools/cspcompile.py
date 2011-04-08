@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import colors
 import os
 import sys
 import time
@@ -59,8 +60,12 @@ while i < arg_len:
 	i = i + 1
 
 # only continue if we need to
-if not build_required:
-	print outfile + ": no compilation required..."
+if build_required:
+	colors.printf("r", outfile + ":")
+	colors.println("d", "\tbuild required...")
+else:
+	colors.printf("g", outfile + ":")
+	colors.println("d", "\tup to date...")
 	exit()
 
 # a small hack for asc.jar to navigate back to the correct working directory

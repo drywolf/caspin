@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import colors
 import os
 import shutil
 import sys
@@ -38,9 +39,11 @@ gen_required = infile_mod_date >= outfile_mod_date
 
 # only continue if we need to
 if gen_required:
-	print infile + ": code generation is required!"
+	colors.printf("r", infile + ":")
+	colors.println("d", "\tglue generation required...")
 else:
-	print infile + ": no generation required..."
+	colors.printf("g", infile + ":")
+	colors.println("d", "\tup to date...")
 	exit()
 
 for i in range(2, len(sys.argv)):

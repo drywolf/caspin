@@ -256,7 +256,7 @@ namespace csp
 		/// base types
 
 		/** Convert an AS3 Boolean to bool */
-		inline bool atomToBool(const avmplus::Atom& atom)
+		static inline bool atomToBool(const avmplus::Atom& atom)
 		{ return (boolean(atom) != 0); }
 
 		/// strings

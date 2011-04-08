@@ -31,13 +31,13 @@ def print_return(type):
 	elif(type == "String"):
 		print("{ return \"\"; }"),
 	
-	elif(type == "void"):
+	elif(type == "void" or type == ""):
 		print("{}"),
 	
 	else:
 		print("{ return null; }"),
 
-def print_expression(start_text, end_text):
+def print_expression(start_text, end_text, attribs = False):
 	decl_start = text.find(start_text);
 	decl_end = text.find("</code>", decl_start);
 
@@ -45,13 +45,21 @@ def print_expression(start_text, end_text):
 		decl_start += len(start_text)
 		decl = remove_html(text[decl_start:decl_end]);
 		if(len(decl) > 0):
-			print(decl),
-		
-			return_delim = decl.rfind(":")
-			return_type = decl[return_delim+1:len(decl)]
-			print_return(return_type);
-		
-			print("");
+			if(attribs):
+				if(decl.find("(") < 0):
+					sys.stdout.write("p")
+					print(decl),
+					print("")
+			else:
+				print(decl),
+				return_delim = decl.rfind(":")
+				if(return_delim < 0):
+					return_type = ""
+				else:
+					return_type = decl[return_delim+1:len(decl)]
+				print_return(return_type);
+				print("")
+
 		decl_start = text.find(start_text, decl_end+1);
 		decl_end = text.find("</code>", decl_end+1);
 
@@ -59,11 +67,11 @@ print("/* Constructor */")
 print_expression("Constructor</td></tr></table><div class=\"detailBody\"><code>", "</code>")
 print("")
 print("/* attributes */")
-print_expression("property</td></tr></table><div class=\"detailBody\"><code>", "</code>");
-print_expression("&nbsp;</td></tr></table><div class=\"detailBody\"><code>", "</code>");
+print_expression("property</td></tr></table><div class=\"detailBody\"><code>p", "</code>", True);
+print_expression("</td></tr></table><div class=\"detailBody\"><code>p", "</code>", True);
 print("")
 print("/* getters & setters */")
-print_expression("<br/><code>&nbsp;&nbsp;&nbsp;&nbsp;", "</code>");
+print_expression("Implementation </span><br/><code>&nbsp;&nbsp;&nbsp;&nbsp;", "</code>");
 print("")
 print("/* methods */")
 print_expression("</td></tr></table><div class=\"detailBody\"><code> ", "</code>");

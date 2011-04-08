@@ -8,9 +8,13 @@ import os
 import shutil
 import time
 
+target = ""
+
 if len(sys.argv) < 2:
-	print "Error: no target specified"
-	exit()
+	print "No target specified, enter one manually: ",
+	target = raw_input("")
+else:
+	target = sys.argv[1]
 
 def create_dirs(target):
 	if os.path.exists(target):
@@ -110,7 +114,6 @@ def copy_tamarin_libs_vc10():
 # --------------------------------------
 # ---------------- MAIN ----------------
 # --------------------------------------
-target = sys.argv[1]
 
 if target != "vc9" and target != "vc10":
 	print "Error: invalid target specified: '" + target + "'"
