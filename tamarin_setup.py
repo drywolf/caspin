@@ -8,11 +8,14 @@ import colors
 import shutil
 import urllib2
 
+# patch the tamarin working copy
+apply_tamarin_path = True
+
 # the tamarin mercurial repository url
-tamarin_repository = "http://hg.mozilla.org/tamarin-central"
+tamarin_repository = "http://hg.mozilla.org/tamarin-redux"
 
 # the tamarin revision that shall be used with this version of caspin
-tamarin_revision = "fbecf6c8a86f"
+tamarin_revision = "227bc825a1bd"
 
 # the download url for the latest ActionScript 3 Compiler version
 asc_url = "ftp.mozilla.org/pub/js/tamarin/builds/asc/latest/asc.jar"
@@ -34,10 +37,11 @@ colors.println("y", "checking out tamarin...\n(this may take serveral minutes de
 os.system(cmd);
 
 # apply the changes to tamarin that are necessarry via a patch
-colors.println("y", "patching tamarin...")
-os.chdir(cwd + "/tamarin/")
-os.system("hg patch --no-commit ../tamarin_changes.diff")
-os.chdir(cwd)
+if apply_tamarin_path:
+	colors.println("y", "patching tamarin...")
+	os.chdir(cwd + "/tamarin/")
+	os.system("hg patch --no-commit ../tamarin_changes.diff")
+	os.chdir(cwd)
 
 # on unix we can start the build process by calling the "tamarin_build.py" script
 if os.name == "posix":

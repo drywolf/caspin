@@ -54,7 +54,6 @@ set (file_root_tamarin_unix
 	${tamarin_path}/shell/PosixFile.h
 	${tamarin_path}/shell/PosixPartialPlatform.cpp
 	${tamarin_path}/shell/PosixPartialPlatform.h
-	${tamarin_path}/VMPI/MMgcPortUnix.cpp
 	${tamarin_path}/VMPI/PosixPortUtils.cpp
 	${tamarin_path}/VMPI/ThreadsPosix.cpp
 	${tamarin_path}/VMPI/UnixDebugUtils.cpp

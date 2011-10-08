@@ -156,7 +156,9 @@ find_path(tamarin_include_base NAMES core/avmplus.h PATHS ${tamarin_path})
 
 # the tamarin include directories
 set (tamarin_include_dirs
+	${tamarin_include_base}/AVMPI
 	${tamarin_include_base}/core
+	${tamarin_include_base}/generated
 	${tamarin_include_base}/vmbase
 	${tamarin_include_base}/VMPI
 	${tamarin_include_base}/platform

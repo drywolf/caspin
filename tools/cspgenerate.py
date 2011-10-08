@@ -22,7 +22,7 @@ if os.path.exists(infile_abc):
 	infile_mod_date = os.path.getmtime(infile_abc)
 
 # base command for invoking nativegen.py (automatically includes the tamarin "builtin.abc")
-cmd = "python " + caspin_home + "/tamarin/utils/nativegen.py " + caspin_home + "/tamarin/core/builtin.abc "
+cmd = "python " + caspin_home + "/tamarin/utils/nativegen.py " + caspin_home + "/tamarin/generated/builtin.abc "
 
 outfile_mod_date = 0
 
@@ -60,18 +60,18 @@ result = os.system(cmd)
 
 if result == 0:
 	# rename and move the cpp/h files
-	if os.path.exists(infile + ".cpp2"):
-		shutil.move(infile + ".cpp2", outfile_cpp)
+	if os.path.exists(infile + ".cpp"):
+		shutil.move(infile + ".cpp", outfile_cpp)
 
-	if os.path.exists(infile + ".h2"):
-		shutil.move(infile + ".h2", outfile_h)
-else:
-	# clear the output
-	if os.path.exists(outfile_cpp):
-		os.remove(outfile_cpp)
-
-	if os.path.exists(outfile_h):
-		os.remove(outfile_h)
+	if os.path.exists(infile + ".h"):
+		shutil.move(infile + ".h", outfile_h)
+#else:
+#	# clear the output
+#	if os.path.exists(outfile_cpp):
+#		os.remove(outfile_cpp)
+#
+#	if os.path.exists(outfile_h):
+#		os.remove(outfile_h)
 
 file = open(outfile_h, "r")
 file2 = open(outfile_h+"2", "w")
