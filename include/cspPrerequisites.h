@@ -181,6 +181,7 @@ namespace csp
 	class NativePackageBase;
 	class OutputListener;
 	class OutputLogger;
+	class SystemClass;
 	class VmCore;
 
 	typedef unsigned int uint;

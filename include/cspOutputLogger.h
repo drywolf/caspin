@@ -45,10 +45,12 @@ the terms of any one of the MPL, the GPL or the LGPL.
 namespace csp
 {
 	/** The class that manages all registered OutputListener instances for one VmCore */
-	class OutputLogger : public avmplus::OutputStream
+	class OutputLogger : public avmplus::GCOutputStream
 	{
 	public:
 		typedef std::map<OutputListener*, OutputListener*> ListenerMap;
+
+		OutputLogger(avmplus::AvmCore* core) {}
 
 		/** Add an OutputListener */
 		bool addListener(OutputListener* listener);
@@ -59,8 +61,11 @@ namespace csp
 		String mMessage;
 		ListenerMap mListeners;
 
-		/** The overridden write method from avmplus::OutputStream */
-		int write(const void *buffer, int count);
+		/** The overridden write method from avmplus::GCOutputStream */
+		void write(const char* utf8);
+
+		/** The overridden writeN method from avmplus::GCOutputStream */
+		void writeN(const char* utf8, size_t count);
 
 		/** Print a message to all listeners */
 		void printMessage(const String& message);

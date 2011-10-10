@@ -38,6 +38,8 @@ the terms of any one of the MPL, the GPL or the LGPL.
 #include "cspOutputLogger.h"
 #include "cspOutputListener.h"
 
+#include "Platform.h"
+
 namespace csp
 {
 	//-----------------------------------------------------------------------
@@ -65,24 +67,48 @@ namespace csp
 		return false;
 	}
 	//-----------------------------------------------------------------------
-	int OutputLogger::write(const void *buffer, int count)
+	//int OutputLogger::write(const void *buffer, int count)
+	//{
+	//	const char* buf = (const char*)buffer;
+
+	//	if(buf[count-1] == '\n')
+	//	{
+	//		if(mMessage.length())
+	//		{
+	//			printMessage(mMessage);
+	//		}
+	//		mMessage.clear();
+	//	}
+	//	else
+	//	{
+	//		mMessage.append(buf, count);
+	//	}
+
+	//	return count;
+	//}
+	//-----------------------------------------------------------------------
+	void OutputLogger::write(const char* utf8)
 	{
-		const char* buf = (const char*)buffer;
+		const char* buf = (const char*)utf8;
+
+		mMessage.append(buf);
+		printMessage(mMessage);
+		mMessage.clear();
+	}
+	//-----------------------------------------------------------------------
+	void OutputLogger::writeN(const char* utf8, size_t count)
+	{
+		const char* buf = (const char*)utf8;
 
 		if(buf[count-1] == '\n')
 		{
 			if(mMessage.length())
-			{
 				printMessage(mMessage);
-			}
+
 			mMessage.clear();
 		}
 		else
-		{
 			mMessage.append(buf, count);
-		}
-
-		return count;
 	}
 	//-----------------------------------------------------------------------
 	void OutputLogger::printMessage(const String& message)

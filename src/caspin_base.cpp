@@ -42,7 +42,7 @@ namespace avmplus { namespace NativeID {
 const uint32_t caspin_base_abc_class_count = 1;
 const uint32_t caspin_base_abc_script_count = 2;
 const uint32_t caspin_base_abc_method_count = 7;
-const uint32_t caspin_base_abc_length = 311;
+const uint32_t caspin_base_abc_length = 344;
 
 /* thunks (1 total) */
 avmplus::Atom caspin_System_trace_thunk(MethodEnv* env, uint32_t argc, Atom* argv)
@@ -101,27 +101,29 @@ AVMTHUNK_END_NATIVE_TABLES()
 AVMTHUNK_DEFINE_NATIVE_INITIALIZER(caspin_base)
 
 /* abc */
-const uint8_t caspin_base_abc_data[311] = {
-  16,   0,  46,   0,   0,   0,   0,  15,   0,   5, 116, 114,  97,  99, 101,  13,
+const uint8_t caspin_base_abc_data[344] = {
+  16,   0,  46,   0,   0,   0,   0,  19,   0,   5, 116, 114,  97,  99, 101,  13,
   99,  97, 115, 112, 105, 110,  58,  83, 121, 115, 116, 101, 109,   4, 118, 111,
  105, 100,   5,  65, 114, 114,  97, 121,   6,  99,  97, 115, 112, 105, 110,   6,
   83, 121, 115, 116, 101, 109,   6,  79,  98, 106, 101,  99, 116,   6, 110,  97,
  116, 105, 118, 101,   3,  99, 108, 115,  18,  58,  58,  99, 115, 112,  58,  58,
-  83, 121, 115, 116, 101, 109,  67, 108,  97, 115, 115,   7, 109, 101, 116, 104,
- 111, 100, 115,   4,  97, 117, 116, 111,   5, 112, 114, 105, 110, 116,   5,  22,
-   1,   5,   3,  22,   6,  24,   3,   0,   7,   7,   1,   2,   7,   1,   4,   7,
-   1,   5,   7,   3,   7,   7,   1,   8,   7,   1,  14,   7,   0,   0,   1,   0,
-   0,   0,   1,   4,   0,   0,   1,   4,   0,   0,   1,   0,   1,   2,   3,   1,
-  32,   0,   0,   1,   0,   0,   0,   1,   0,   1,   9,   2,  10,  12,  11,  13,
-   1,   4,   5,   9,   4,   0,   5,   0,   3,   1,   1,  17,   3,   4,   2,   6,
-   3,   4,  68,   1,   0,   1,   0,   6,   1,   1,   2,   1,   1,   2,   1,   0,
-   0,   6,   0,   1,   1,   1,   2,   3, 208,  48,  71,   0,   0,   1,   2,   2,
-   1,   2,  11, 208,  48, 100, 108,   1, 209,  70,   1,   1,  41,  71,   0,   0,
-   2,   2,   2,   1,   2,  11, 208,  48, 100, 108,   1, 209,  70,   1,   1,  41,
-  71,   0,   0,   3,   1,   1,   3,   4,   3, 208,  48,  71,   0,   0,   5,   1,
-   1,   4,   5,   6, 208,  48, 208,  73,   0,  71,   0,   0,   6,   2,   1,   1,
-   3,  19, 208,  48, 101,   0,  93,   5, 102,   5,  48,  93,   5, 102,   5,  88,
-   0,  29, 104,   4,  71,   0,   0};
+  83, 121, 115, 116, 101, 109,  67, 108,  97, 115, 115,   7,  99, 108,  97, 115,
+ 115, 103,  99,   5, 101, 120,  97,  99, 116,   7, 109, 101, 116, 104, 111, 100,
+ 115,   4,  97, 117, 116, 111,   9,  99, 111, 110, 115, 116, 114, 117,  99, 116,
+   4, 110, 111, 110, 101,   5, 112, 114, 105, 110, 116,   5,  22,   1,   5,   3,
+  22,   6,  24,   3,   0,   7,   7,   1,   2,   7,   1,   4,   7,   1,   5,   7,
+   3,   7,   7,   1,   8,   7,   1,  18,   7,   0,   0,   1,   0,   0,   0,   1,
+   4,   0,   0,   1,   4,   0,   0,   1,   0,   1,   2,   3,   1,  32,   0,   0,
+   1,   0,   0,   0,   1,   0,   1,   9,   4,  10,  12,  14,  16,  11,  13,  15,
+  17,   1,   4,   5,   9,   4,   0,   5,   0,   3,   1,   1,  17,   3,   4,   2,
+   6,   3,   4,  68,   1,   0,   1,   0,   6,   1,   1,   2,   1,   1,   2,   1,
+   0,   0,   6,   0,   1,   1,   1,   2,   3, 208,  48,  71,   0,   0,   1,   2,
+   2,   1,   2,  11, 208,  48, 100, 108,   1, 209,  70,   1,   1,  41,  71,   0,
+   0,   2,   2,   2,   1,   2,  11, 208,  48, 100, 108,   1, 209,  70,   1,   1,
+  41,  71,   0,   0,   3,   1,   1,   3,   4,   3, 208,  48,  71,   0,   0,   5,
+   1,   1,   4,   5,   6, 208,  48, 208,  73,   0,  71,   0,   0,   6,   2,   1,
+   1,   3,  19, 208,  48, 101,   0,  93,   5, 102,   5,  48,  93,   5, 102,   5,
+  88,   0,  29, 104,   4,  71,   0,   0};
 
 
 /* versioned_uris */
@@ -143,14 +145,10 @@ extern "C" const struct {
 } }
 /*static*/ avmplus::ClassClosure* FASTCALL csp::SystemClass::createClassClosure(avmplus::VTable* cvtable)
 {
-    cvtable->ivtable->createInstanceProc = csp::SystemClass::createInstanceProc;
-    ClassClosure* const cc = new (cvtable->gc(), cvtable->getExtraSize()) csp::SystemClass(cvtable);
+    cvtable->ivtable->createInstanceProc = ClassClosure::cantInstantiateCreateInstanceProc;
+    ClassClosure* const cc = new (cvtable->gc(), MMgc::kExact, cvtable->getExtraSize()) csp::SystemClass(cvtable);
     AvmThunk_DEBUG_ONLY( avmplus::NativeID::SlotOffsetsAndAsserts::check_csp_SystemClass(cc->traits(), cc->traits()->itraits); )
     return cc;
-}
-/*static*/ avmplus::ScriptObject* FASTCALL csp::SystemClass::createInstanceProc(avmplus::ClassClosure* cls)
-{
-    return new (cls->gc(), MMgc::kExact, cls->getExtraSize()) avmplus::SystemObject(cls->ivtable(), cls->prototypePtr());
 }
 AvmThunk_DEBUG_ONLY( avmplus::Atom csp::SystemClass::construct(int argc, avmplus::Atom* argv) { return avmplus::ClassClosure::construct(argc, argv); } )
 AvmThunk_DEBUG_ONLY( avmplus::Atom avmplus::SystemObject::construct(int argc, avmplus::Atom* argv) { return avmplus::ScriptObject::construct(argc, argv); } )

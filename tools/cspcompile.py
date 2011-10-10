@@ -35,7 +35,7 @@ cmd = "java -ea -DAS3 -DAVMPLUS -classpath " + caspin_home + "/tamarin/utils/asc
 cmd += outfile
 
 # import the default tamarin builtin code
-cmd += " -builtin -import " + caspin_home + "/tamarin/generated/builtin.abc -import " + caspin_home + "/as3/caspin_base.abc "
+cmd += " -abcfuture -import " + caspin_home + "/tamarin/generated/builtin.abc -builtin -import " + caspin_home + "/as3/caspin_base.abc "
 
 build_required = False
 

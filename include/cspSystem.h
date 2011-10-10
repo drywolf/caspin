@@ -40,12 +40,13 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 #include "cspPrerequisites.h"
 
+#include "caspin_base-classes.hh"
 #include "caspin_base.h"
 
 namespace csp
 {
 	/** The ActionScript 3 class that implements some basic helpers, such as the "trace(...)" function */
-	class SystemClass : public avmplus::ClassClosure
+	class GC_AS3_EXACT(SystemClass, avmplus::ClassClosure)
 	{
 	public:
 		SystemClass(avmplus::VTable* cvtable);
@@ -53,6 +54,10 @@ namespace csp
 
 		/** Print ActionScript 3 objects to the OutputLogger */
 		void trace(avmplus::ArrayObject* a);
+
+		GC_NO_DATA(SystemClass)
+
+		DECLARE_SLOTS_SystemClass;
 	};
 }
 

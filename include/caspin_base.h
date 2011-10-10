@@ -76,23 +76,15 @@ class csp_SystemClassSlots
 {
     friend class SlotOffsetsAndAsserts;
     friend class csp::SystemClass;
+#define GC_TRIVIAL_TRACER_SystemClass
 };
 #define DECLARE_SLOTS_SystemClass \
     public: \
         static avmplus::ClassClosure* FASTCALL createClassClosure(avmplus::VTable* cvtable); \
     public: \
-        static avmplus::ScriptObject* FASTCALL createInstanceProc(avmplus::ClassClosure*); \
-    public: \
         AvmThunk_DEBUG_ONLY( virtual avmplus::Atom construct(int argc, avmplus::Atom* argv); ) \
     private: \
         AvmThunk_DEBUG_ONLY( virtual void createInstance() { AvmAssert(0); } ) \
-    public: \
-        inline GCRef<avmplus::SystemObject> constructObject() \
-        { \
-            avmplus::Atom args[1] = { thisRef.reinterpretCast<avmplus::ScriptObject>()->atom() }; \
-            avmplus::Atom const result = this->construct(0, args); \
-            return GCRef<avmplus::SystemObject>((avmplus::SystemObject*)(avmplus::AvmCore::atomToScriptObject(result))); \
-        } \
     public: \
         REALLY_INLINE bool isType(avmplus::Atom value) \
         { \

@@ -37,7 +37,7 @@ the terms of any one of the MPL, the GPL or the LGPL.
 
 package caspin
 {
-	[native(cls="::csp::SystemClass", methods="auto")]
+	[native(cls="::csp::SystemClass", classgc="exact", methods="auto", construct="none")]
 	public class System
 	{
 		public native static function trace(a:Array):void;

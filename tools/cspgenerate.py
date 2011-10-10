@@ -14,6 +14,7 @@ infile = sys.argv[1]
 infile_abc = infile + ".abc"
 outfile_cpp = "../src/" + infile + ".cpp"
 outfile_h = "../include/" + infile + ".h"
+outfile_classes_hh = "../include/" + infile + "-classes.hh"
 
 infile_mod_date = 1
 
@@ -65,6 +66,9 @@ if result == 0:
 
 	if os.path.exists(infile + ".h"):
 		shutil.move(infile + ".h", outfile_h)
+
+	if os.path.exists(infile + "-classes.hh"):
+		shutil.move(infile + "-classes.hh", outfile_classes_hh)
 #else:
 #	# clear the output
 #	if os.path.exists(outfile_cpp):
